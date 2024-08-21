@@ -23,16 +23,23 @@ The **ocular disease identifier** project involves developing an AI model that c
 
 <br/>
 
-The team will comprise of two sub-teams; the Frontend sub-team, and the Backend sub-team. As a brief summary, the main focus of each sub-team is as follows. The Frontend sub-team is responsible for the development of the web application, as well as an API using a Python framework. The Backend sub-team is responsible for the development of a convolutional neural network (CNN) using TensorFlow. The model is to be trained using a publicly sourced dataset. If you are curious about how GCP will be used in this project, see *Figure 2* below! For more information about the project, please see the attached [Project Roadmap](./PROJECT-ROADMAP.md) which includes a detailed [Sprint Plan](./PROJECT-ROADMAP.md#sprint-planning) and proposed [Tech Stack](./PROJECT-ROADMAP.md#tech-stack) for the project.
+The team will comprise of two sub-teams; the Frontend sub-team, and the Backend sub-team. As a brief summary, the main focus of each sub-team is as follows. The Frontend sub-team is responsible for the development of the web application, as well as an API using a Python framework. The Backend sub-team is responsible for the development of a convolutional neural network (CNN) using TensorFlow. The model is to be trained using a publicly sourced dataset. For more information about the project, please see the attached [Project Roadmap](./PROJECT-ROADMAP.md) which includes a detailed [Sprint Plan](./PROJECT-ROADMAP.md#sprint-planning) and proposed [Tech Stack](./PROJECT-ROADMAP.md#tech-stack) for the project.
 
-<br/>
 
-![Figure 2](./Documentation/images/Architecture.png)
-<p align="center"><em>Figure 2: Architecture Diagram.</em></p>
+
 
 ## Available Developer Positions :busts_in_silhouette:
 
-There will be ***3 available positions for each of the two sub-teams*** indicated above (6 total). As a side note, being assigned to a specific sub-team does **not** necessarily mean you will not learn about the other, however it **is** where the bulk of your contributions will be made. Students of all years are encouraged to apply!
+There will be ***3 available positions for each of the two sub-teams*** indicated above (6 total). As a side note, being assigned to a specific sub-team does **not** necessarily mean you will not learn about the other, however it **is** where the bulk of your contributions will be made. 
+
+This position will provide you with relevant experience that will help you stand out to recruiters. I am looking for individuals who will put in consistent effort and who are eager to learn! Apply to this team to have your work displayed in the contributions table below!
+
+
+| <div style="width:100px"> Contributor </div>                                                                   | Most Used Frameworks/Tools | Notable Contributions |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------- | --------------------- |
+| <img src="Documentation/images/portrait-low-mb.png" alt="Kristian Diana" width="100"/> <br/> **Kristian Diana** <br/> <i/> Project Lead </i> |                            |                       |
+| **Your Name!** |                |           |
+
 
 ## For More Information...
 ### [View the Project Roadmap](./PROJECT-ROADMAP.md)
