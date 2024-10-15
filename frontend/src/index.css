@@ -1,3 +1,72 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/**
+ * ========
+ * Local Fonts
+ * ========
+**/
+
+/* Product Sans (Google's Logo Font) */
+@font-face {
+  font-family: "ProductSans";
+  src: url("/fonts/ProductSans/Product\ Sans\ Regular.ttf");
+}
+
+@font-face {
+  font-family: "ProductSans";
+  src: url("/fonts/ProductSans/Product\ Sans\ Italic.ttf");
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "ProductSans";
+  src: url("/fonts/ProductSans/Product\ Sans\ Bold.ttf");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "ProductSans";
+  src: url("/fonts/ProductSans/Product\ Sans\ Bold\ Italic.ttf");
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* Base styles */
+@layer base {
+  body {
+    background-color: #fafafa;
+  }
+}
+
+/* Custom component classes */
+@layer components {
+  .font-navlink {
+    font-size: 16px; 
+    font-family: "ProductSans"; 
+    font-weight: 400; 
+    text-wrap: nowrap;
+    position: relative;
+  }
+
+  .anim-navlink {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 3px;
+    border-radius: 0px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    bottom: -15px;
+    left: 0;
+
+    background-color: #5F6368;
+    transition: all 0.25s ease;
+    transform: scaleX(0);
+  }
+
+  .anim-navlink-hover {
+    transform: scaleX(1);
+  }
+}
