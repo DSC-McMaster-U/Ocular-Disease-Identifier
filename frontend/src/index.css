@@ -38,9 +38,29 @@
   body {
     background-color: #fafafa;
   }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Scrollbar background */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Scrollbar Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(193, 193, 193);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(150, 150, 150);
+  }
 }
 
-/* Custom component classes */
+/* Custom component classes - mostly ones with complex or many attributes */
 @layer components {
   .font-navlink {
     font-size: 16px; 
@@ -68,5 +88,10 @@
 
   .anim-navlink-hover {
     transform: scaleX(1);
+  }
+
+  .dashed-box {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='48' ry='48' stroke='%23A1C5FEFF' stroke-width='8' stroke-dasharray='6%2c 22' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    border-radius: 48px;
   }
 }

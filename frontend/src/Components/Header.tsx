@@ -15,7 +15,7 @@ const Header = () => {
         Header Nav Links 
         WIP Note: Implement responsive mobile menu later (dropdown or offcanvas), if time permitting
       */}
-      <div className="w-full max-w-[951px] h-[21px] flex justify-between items-center shrink">
+      <div className="w-full h-[21px] flex justify-between items-center shrink">
         {/* Middle Primary Nav Links */}
         <ul className="w-min h-[21px] flex gap-[33px]">
           <a href="">
