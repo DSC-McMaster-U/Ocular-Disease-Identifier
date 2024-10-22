@@ -30,7 +30,7 @@ const UploadPage = () => {
   // Image preview file components
   const PreviewCapsule = ({file, fileIndex, children}: PreviewProps) => {
     let fileName, fileNameTemp;
-    const fileNameSize = 30;
+    const fileNameSize = 25;
     
     // Trimming of file name in order to prevent overflow or text wrapping
     if (file.name.length > fileNameSize) {
@@ -44,7 +44,7 @@ const UploadPage = () => {
     return (
       <div
         className="
-          md:max-w-[413px] md:min-h-[79px] w-full h-fit px-[24px]
+          md:max-w-[413px] min-h-[79px] w-full h-fit px-[24px]
           flex flex-col justify-center
           bg-white rounded-xl border border-[#d2d2d2]          
         "
