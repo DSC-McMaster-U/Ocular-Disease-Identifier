@@ -219,16 +219,6 @@ const UploadPage = () => {
             </div>
           </div>
         </div>
-
-        <h1>Debug: Image Preview Testing</h1>
-        <div>
-          <div>
-            {images &&
-              images.map((image) => (
-                <img src={URL.createObjectURL(image)}></img>
-              ))}
-          </div>
-        </div>
       </div>
     </>
   );
