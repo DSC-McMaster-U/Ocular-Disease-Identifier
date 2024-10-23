@@ -3,7 +3,7 @@
 <div align="center">
 
 
-*Baka, and welcome to one of the 2024 McMaster GDSC Open Source project repos! Project Lead: [Kristian Diana](https://github.com/kristiandiana).*
+*Hello, and welcome to one of the 2024 McMaster GDSC Open Source project repos! Project Lead: [Kristian Diana](https://github.com/kristiandiana).*
 
 
 
