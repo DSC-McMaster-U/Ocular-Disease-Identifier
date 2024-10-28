@@ -18,10 +18,24 @@ def test_post():
 
 @app.route('/image_posting',methods=['POST'])
 def image_posting():
-    image = request.files['image']
-    display_image = Image.open(image)
-    display_image.show()
-    return jsonify(text=f"Image '{image.filename}' received"), 200
+    # print("Request headers:", request.headers) 
+    # print("Request method:", request.method)    
+    # print("Files:", request.files)
+    # print("Form Data:", request.form)
+    
+    if 'images' not in request.files:
+        return jsonify({"error": "No image part in the request"}), 400
+    
+    images = request.files.getlist('images')
+    
+    for image in images:
+        if image.filename == '':
+            return jsonify({"error": "No selected file"}), 400
+        img = Image.open(image)
+        img.show()
+
+    return jsonify({"message": f"Image '{image.filename}' uploaded successfully!"}), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=1000)
