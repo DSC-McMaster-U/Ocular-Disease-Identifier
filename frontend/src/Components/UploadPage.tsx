@@ -21,7 +21,7 @@ const UploadPage = () => {
   const inputRef = useRef<File[]>(null);
 
   const handleDelete = (deleteIndex: number) => {
-    let tempImages = [...images];
+    const tempImages = [...images];
     tempImages.splice(deleteIndex, 1);
     setImages(tempImages);
   };
