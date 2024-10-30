@@ -92,6 +92,9 @@
 
   .dashed-box {
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='48' ry='48' stroke='%23A1C5FEFF' stroke-width='8' stroke-dasharray='6%2c 22' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    border: 0px solid rgba(161,197,254,1);
     border-radius: 48px;
+    transition: all 0.2s ease-in-out;
   }
+
 }

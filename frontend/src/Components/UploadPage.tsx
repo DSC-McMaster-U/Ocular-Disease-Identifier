@@ -1,5 +1,6 @@
 import Header from "./Header";
 import { useRef, useState, ReactNode } from "react";
+
 import ImagePopup from "./ImagePopup";
 import UploadArrow from "../vendor/img/UploadPage/upload-arrow.png";
 import DeleteIcon from "../vendor/img/UploadPage/trash-icon.png";
@@ -20,11 +21,169 @@ const UploadPage = () => {
   const [dragActive, setDragActive] = useState<boolean>(false);
   const inputRef = useRef<File[]>(null);
 
+  // Detects when site is currently uploading images, and prevents any more POST requests from being made
+  const [uploadActive, setUploadActive] = useState<boolean>(false);
+
   const handleDelete = (deleteIndex: number) => {
     const tempImages = [...images];
     tempImages.splice(deleteIndex, 1);
     setImages(tempImages);
   };
+
+  // Upload form auxiliary functions
+  const handleChange = (event: any) => {
+    event.preventDefault();
+
+    // If manual upload images exist, then append new files to current images array; if not, keep same images
+    setImages(
+      event.target.files && event.target.files[0]
+        ? [...images, ...event.target.files]
+        : [...images]
+    );
+  };
+
+  const handleDrop = (event: any) => {
+    // Prevent default browser actions from occurring due to drag-drop
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Signal that user is not drag/dropping, to change visual appearance of upload box
+    setDragActive(false);
+
+    // If drag-drop images exist, then append new files to current images array; if not, keep same images
+    setImages(
+      event.dataTransfer.files && event.dataTransfer.files[0]
+        ? [...images, ...event.dataTransfer.files]
+        : [...images]
+    );
+  }
+
+  const handleDragLeave = (event: any) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.currentTarget.contains(event.relatedTarget)) {
+      return;
+    }
+
+    setDragActive(false);
+  }
+
+  const handleDragActive = (event: any)=>  {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setDragActive(true);
+  }
+
+  // Image uploading functions
+  const handleSubmit = (event: any) => {
+    const formData = new FormData();
+
+    if (!images.length) {
+      // Temporary error-handling/debug for now
+      alert("No image files detected. Please upload some images first and try again.");
+      return;
+    }
+
+    images.forEach((image) => {
+      formData.append("images", image)
+    })
+
+    setUploadActive(true);
+    uploadImage(formData)
+  }
+
+  const uploadImage = async (imageData: FormData) => {
+    // Using temporary URL for now...
+    const url: string = "http://127.0.0.1:1000/";
+
+    await fetch( url + "image_posting", {
+      method: "POST",
+      body: imageData
+    }).then(
+      (res) => {
+        res.json().then(data => console.log(data));
+        
+        if (res.ok) {
+          alert("Successfully uploaded image(s)!");
+          setUploadActive(false);
+        } else {
+          alert("There was a server error during image upload.");
+        }
+      }
+    ).catch(
+      (error) => {
+        console.error("Error:", error);
+        alert("An error ocurred while uploading the image; please try again later.");
+      }
+    )
+  }
+
+  // Upload drag-and-drop area component
+  const UploadBox = () => {
+    return(
+      <div className="w-full h-full flex items-center justify-center">
+        <form
+          id="upload-form"
+          className={`${dragActive ? "bg-[#d9e7ff] border-[4px] border-[#a1c5fe] bg-none" : ""}
+            dashed-box  
+            w-full min-h-[346px] h-full text-center
+            flex flex-col items-center justify-center`}
+          onDragEnter={handleDragActive}
+          onSubmit={(event) => event.preventDefault()}
+          onDrop={handleDrop}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragActive}
+        >
+          {/* Input for drag and drop; currently not implemented, WIP */}
+          <input
+            type="file"
+            name="images"
+            id="image-upload-click"
+            multiple
+            hidden
+            accept="image/png, image/jpeg, image/bmp"
+            // ref={inputRef}
+
+            // Move the following below to separate handleUpload/Change function, so this can also be used for drag-drop
+            onChange={handleChange}
+          />
+
+          <div className="flex flex-col justify-evenly gap-[8px]">
+            <img
+              src={UploadArrow}
+              alt=""
+              draggable={false}
+              className="w-[81px] h-auto mx-auto mb-[26px] select-none"
+            />
+
+            <span className="text-center text-[#4c4c4c] text-base font-bold font-['Inter'] mx-[30px]">
+              Drag & drop files to upload
+            </span>
+
+            <span className="text-center text-[#4c4c4c] text-sm font-normal font-['Inter']">
+              or
+            </span>
+
+            <label
+              htmlFor="image-upload-click"
+              className="
+                max-w-[138px] min-h-[39px] h-fit w-full mx-auto
+                bg-[#387eed] rounded-[25px] flex justify-center align-middle cursor-pointer
+              "
+              // onClick={openFileExplorer}
+            >
+              <span className="text-center text-white text-sm font-bold font-google my-auto cursor-pointer">
+                Browse files...
+              </span>
+            </label>
+
+          </div>
+        </form>
+      </div>
+    )
+  }
 
   // Image preview file components
   const PreviewCapsule = ({ file, fileIndex, children }: PreviewProps) => {
@@ -90,78 +249,7 @@ const UploadPage = () => {
               px-[48px] bg-white rounded-[48px] shadow-section border border-[#585858]
             "
           >
-            {/* WIP: Separate into a component file later... */}
-            <div className="w-full h-full flex items-center justify-center">
-              <form
-                className={`${dragActive ? "bg-blue-400" : "dashed-box"}  
-                  w-full min-h-[346px] h-full text-center
-                  flex flex-col items-center justify-center`}
-                // onDragEnter={handleDragEnter}
-                onSubmit={(e) => e.preventDefault()}
-                // onDrop={handleDrop}
-                // onDragLeave={handleDragLeave}
-                // onDragOver={handleDragOver}
-              >
-                {/* Input for drag and drop; currently not implemented, WIP */}
-                <input
-                  placeholder="fileInput"
-                  hidden
-                  className=""
-                  // ref={inputRef}
-                  type="file"
-                  multiple
-                  // onChange={handleChange}
-                  accept="image/png, image/jpeg, image/bmp"
-                />
-
-                <div className="flex flex-col justify-evenly gap-[8px]">
-                  <img
-                    src={UploadArrow}
-                    alt=""
-                    draggable={false}
-                    className="w-[81px] h-auto mx-auto mb-[26px] select-none"
-                  />
-
-                  <span className="text-center text-[#4c4c4c] text-base font-bold font-['Inter'] mx-[30px]">
-                    Drag & drop files to upload
-                  </span>
-
-                  <span className="text-center text-[#4c4c4c] text-sm font-normal font-['Inter']">
-                    or
-                  </span>
-
-                  <label
-                    htmlFor="image-upload-click"
-                    className="
-                      max-w-[138px] min-h-[39px] h-fit w-full mx-auto
-                      bg-[#387eed] rounded-[25px] flex justify-center align-middle cursor-pointer
-                    "
-                    // onClick={openFileExplorer}
-                  >
-                    <span className="text-center text-white text-sm font-bold font-google my-auto cursor-pointer">
-                      Browse files...
-                    </span>
-                  </label>
-
-                  <input
-                    type="file"
-                    name="imageUpload"
-                    id="image-upload-click"
-                    multiple
-                    hidden
-                    accept="image/png, image/jpeg, image/bmp"
-                    // Move the following below to separate handleUpload function, so this can also be used for drag-drop
-                    onChange={(event) => {
-                      setImages(
-                        event.target.files
-                          ? [...images, ...event.target.files]
-                          : [...images]
-                      );
-                    }}
-                  />
-                </div>
-              </form>
-            </div>
+            <UploadBox />
           </div>
 
           {/* Preview Section */}
@@ -201,22 +289,25 @@ const UploadPage = () => {
                 </span>
               )}
             </div>
-            <div
+            <button
               className={`${
-                images.length
+                images.length && !uploadActive
                   ? "bg-[#387eed] cursor-pointer"
                   : "bg-[#8ebaff] cursor-default"
               }
                 max-w-[338px] min-h-[51px] h-fit w-full mx-auto
                 bg-[#387eed] rounded-[25px] flex justify-center align-middle
-                transition-all ease-in-out
+                transition-all ease-in-out focus-visible:outline-none
               `}
-              // onClick={openFileExplorer}
+              onClick={handleSubmit}
+              disabled={images.length <= 0 && !uploadActive}
+              type="submit"
+              form="upload-form"
             >
               <span className="text-center text-white text-md font-bold font-google my-auto">
-                Upload Files
+                {uploadActive ? "Uploading Files..." : "Upload Files"}
               </span>
-            </div>
+            </button>
           </div>
         </div>
       </div>
