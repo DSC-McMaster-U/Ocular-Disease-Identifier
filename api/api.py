@@ -1,10 +1,17 @@
 import json
+import uuid
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from PIL import Image
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
+from preprocess import preprocess_image
 
 app = Flask(__name__)
 CORS(app)
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 
 @app.route('/test',methods=['GET'])
 def test():
@@ -31,8 +38,23 @@ def image_posting():
     for image in images:
         if image.filename == '':
             return jsonify({"error": "No selected file"}), 400
-        img = Image.open(image)
-        img.show()
+        
+        # print(UPLOAD_FOLDER)
+        
+        file_name = f"{uuid.uuid4()}_{image.filename}"
+        file_path = os.path.join(UPLOAD_FOLDER, file_name)
+        
+        try:
+            img = Image.open(image.stream)
+            img.save(file_path)
+            print(f"Image saved to {file_path}")
+            
+            data = preprocess_image(file_path)
+            print(data)
+        
+        except Exception as e:
+            print(f"Failed to save or process image {file_name}: {e}")
+            return jsonify({"error": f"Failed to save image {file_name}"}), 500
 
     return jsonify({"message": f"Image '{image.filename}' uploaded successfully!"}), 200
 
