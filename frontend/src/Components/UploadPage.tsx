@@ -4,6 +4,8 @@ import { useRef, useState, ReactNode } from "react";
 import ImagePopup from "./ImagePopup";
 import UploadArrow from "../vendor/img/UploadPage/upload-arrow.png";
 import DeleteIcon from "../vendor/img/UploadPage/trash-icon.png";
+import LoadingGif from "../vendor/img/UploadPage/loading.gif";
+import SuccessIcon from "../vendor/img/UploadPage/success.png";
 
 interface Props {
   children?: ReactNode;
@@ -23,6 +25,8 @@ const UploadPage = () => {
 
   // Detects when site is currently uploading images, and prevents any more POST requests from being made
   const [uploadActive, setUploadActive] = useState<boolean>(false);
+  const [resultsActive, setResultsActive] = useState<boolean>(false);
+  const [firstUploadMade, setFirstUploadMade] = useState<boolean>(false); 
 
   const handleDelete = (deleteIndex: number) => {
     const tempImages = [...images];
@@ -91,6 +95,7 @@ const UploadPage = () => {
     })
 
     setUploadActive(true);
+    setFirstUploadMade(true);      // Should always stay true after first upload
     uploadImage(formData)
   }
 
@@ -102,12 +107,14 @@ const UploadPage = () => {
       method: "POST",
       body: imageData
     }).then(
-      (res) => {
+      async (res) => {
         res.json().then(data => console.log(data));
         
         if (res.ok) {
           alert("Successfully uploaded image(s)!");
           setUploadActive(false);
+          await new Promise(resolve => setTimeout(resolve, 500));
+          setResultsActive(true);
         } else {
           alert("There was a server error during image upload.");
         }
@@ -119,6 +126,61 @@ const UploadPage = () => {
       }
     )
   }
+
+  // Loading & results modals - specific to upload page, and appears when images are being processed
+  const ResultsModal = ({ children }: Props) => {
+    return(
+      <div 
+        className={`${!firstUploadMade ? "opacity-0 invisible z-[-1]" : ((uploadActive || resultsActive) ? "bg-anim-in" : "bg-anim-out")}
+          fixed z-10 w-full h-full bg-black/[0.4] px-[100px] flex justify-center`
+        }
+      >
+        {/* Loading Modal */}
+        {/* Duplicate below for another copy of the modal for showing results, such that it displays after loading modal */}
+        <div
+          className={`${uploadActive ? "modal-anim-in" : "modal-anim-out"}
+            ${resultsActive ? "hidden" : (!uploadActive ? "hidden" : "")}
+            max-w-[824px] w-full container translate-y-[-5%]
+            h-fit min-h-[50%] my-auto bg-white rounded-[48px] 
+            border-2 border-[#828282]
+            flex justify-center flex-col align-middle gap-[25px]`}
+        >
+          <img src={LoadingGif} alt="" className="max-w-[250px] w-full h-auto relative left-[50%] translate-x-[-50%] mt-[-10px]" />
+          <span className="text-[#4c4c4c] text-[30px] font-bold font-google relative left-[50%] translate-x-[-50%] w-fit tracking-[0.01em]">
+            Processing Images...
+          </span>
+        </div>
+
+        {/* Results Modal */}
+        <div
+          className={`${uploadActive ? "hidden" : (resultsActive ? "modal-anim-in" : "modal-anim-out")}
+            max-w-[824px] w-full container translate-y-[-5%]
+            h-fit min-h-[50%] my-auto bg-white rounded-[48px] 
+            border-2 border-[#828282]
+            flex justify-center flex-col align-middle gap-[25px]`}
+        >
+          <img src={SuccessIcon} alt="" className="max-w-[100px] w-full h-auto relative left-[50%] translate-x-[-50%] mt-[-10px]" />
+          <span className="text-[#4c4c4c] text-[30px] font-bold font-google relative left-[50%] translate-x-[-50%] w-fit tracking-[0.01em]">
+            Successfully analyzed images!
+          </span>
+          <div className="mt-[20px] w-fit relative left-[50%] translate-x-[-50%] italic">(Cue some sort of scrollable results section here...)</div>
+          <button
+            className="bg-[#387eed] cursor-pointer
+              max-w-[338px] min-h-[51px] h-fit w-full mx-auto mt-[20px]
+              bg-[#387eed] rounded-[25px] flex justify-center align-middle
+              transition-all ease-in-out focus-visible:outline-none"
+            onClick={() => {
+              setResultsActive(false);
+            }}
+          >
+            <span className="text-center text-white text-md font-bold font-google my-auto">
+              Upload More Images
+            </span>
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   // Upload drag-and-drop area component
   const UploadBox = () => {
@@ -233,6 +295,7 @@ const UploadPage = () => {
   return (
     <>
       <Header />
+      <ResultsModal />
       <div className="mt-[60px]">
         <div
           className="

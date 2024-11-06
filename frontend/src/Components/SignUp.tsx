@@ -8,7 +8,7 @@ const SignUp = () => {
     <>
       <Header></Header>;
       <div className="mt-[60px] w-full h-[500px]">
-        <div className="w-[480px] h-[480px] border-[#000000] border-[1px] rounded-[15px] m-auto mt-[155px] ">
+        <div className="w-[480px] h-[480px] border-[#585858] border rounded-[15px] m-auto mt-[155px] bg-white shadow-section">
           <div className="flex flex-row flex-wrap">
             <h2 className="w-full mt-8 font-thin font-google text-[20px] text-center">
               Create an Account

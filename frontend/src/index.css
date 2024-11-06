@@ -97,4 +97,74 @@
     transition: all 0.2s ease-in-out;
   }
 
+  .bg-anim-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+  }
+
+  .bg-anim-out {
+    animation: fadeOut 0.5s ease-in-out forwards;
+  }
+
+  .modal-anim-in {
+    animation: riseIn 0.3s ease-in-out forwards;
+  }
+
+  .modal-anim-out {
+    animation: riseOut 0.3s ease-in-out forwards;
+  }
+
+  /* All Animation Keyframes */
+  @keyframes fadeIn {
+    0% { 
+      opacity: 0;
+      visibility: hidden;
+      z-index: -1; 
+    }
+    5% {
+      opacity: 0;
+      visibility: visible;
+      z-index: 10;
+    }
+    100% { 
+      opacity: 1; 
+    }
+  }
+
+  @keyframes fadeOut {
+    0% { 
+      opacity: 1; 
+      visibility: visible;
+      z-index: 10;
+    }
+    95% {
+      opacity: 0;
+    }
+    100% { 
+      opacity: 0; 
+      visibility: hidden;
+      z-index: -1;
+    }
+  }
+
+  @keyframes riseIn {
+    0% { 
+      opacity: 0; 
+      transform: translateY(-5%);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateY(-10%);
+    }
+  }
+
+  @keyframes riseOut {
+    0% { 
+      opacity: 1; 
+      transform: translateY(-10%);
+    }
+    100% { 
+      opacity: 0; 
+      transform: translateY(-5%);
+    }
+  }
 }
