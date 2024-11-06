@@ -25,8 +25,13 @@ const UploadPage = () => {
 
   // Detects when site is currently uploading images, and prevents any more POST requests from being made
   const [uploadActive, setUploadActive] = useState<boolean>(false);
-  const [resultsActive, setResultsActive] = useState<boolean>(false);
   const [firstUploadMade, setFirstUploadMade] = useState<boolean>(false); 
+
+  // Keeps track of when page is displaying the results popup
+  const [resultsActive, setResultsActive] = useState<boolean>(false);
+
+  // For when page is not in the midst of uploading or displaying results
+  const [pageReady, setPageReady] = useState<boolean>(true);   
 
   const handleDelete = (deleteIndex: number) => {
     const tempImages = [...images];
@@ -112,7 +117,7 @@ const UploadPage = () => {
         
         if (res.ok) {
           // alert("Successfully uploaded image(s)!");
-          await new Promise(resolve => setTimeout(resolve, 3000));
+          await new Promise(resolve => setTimeout(resolve, 3500));
           setUploadActive(false);
           setResultsActive(true);
         } else {
@@ -153,7 +158,7 @@ const UploadPage = () => {
 
         {/* Results Modal */}
         <div
-          className={`${uploadActive ? "hidden" : (resultsActive ? "modal-anim-in" : "modal-anim-out")}
+          className={`${(resultsActive ? "modal-anim-in" : ((uploadActive || !pageReady) ? "hidden" : "modal-anim-out" ))}
             max-w-[824px] w-full container translate-y-[-5%]
             h-fit min-h-[50%] my-auto bg-white rounded-[48px] 
             border-2 border-[#828282]
@@ -171,6 +176,7 @@ const UploadPage = () => {
               transition-all ease-in-out focus-visible:outline-none"
             onClick={() => {
               setResultsActive(false);
+              setPageReady(true);
             }}
           >
             <span className="text-center text-white text-md font-bold font-google my-auto">
