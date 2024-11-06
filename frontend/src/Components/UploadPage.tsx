@@ -114,7 +114,6 @@ const UploadPage = () => {
           // alert("Successfully uploaded image(s)!");
           await new Promise(resolve => setTimeout(resolve, 3000));
           setUploadActive(false);
-          await new Promise(resolve => setTimeout(resolve, 500));
           setResultsActive(true);
         } else {
           alert("There was a server error during image upload.");
