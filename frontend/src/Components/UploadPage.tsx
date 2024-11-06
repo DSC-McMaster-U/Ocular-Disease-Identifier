@@ -112,6 +112,7 @@ const UploadPage = () => {
         
         if (res.ok) {
           // alert("Successfully uploaded image(s)!");
+          await new Promise(resolve => setTimeout(resolve, 3000));
           setUploadActive(false);
           await new Promise(resolve => setTimeout(resolve, 500));
           setResultsActive(true);
