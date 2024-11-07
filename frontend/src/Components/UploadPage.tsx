@@ -25,7 +25,6 @@ const UploadPage = () => {
 
   // Detects when site is currently uploading images, and prevents any more POST requests from being made
   const [uploadActive, setUploadActive] = useState<boolean>(false);
-  const [firstUploadMade, setFirstUploadMade] = useState<boolean>(false); 
 
   // Keeps track of when page is displaying the results popup
   const [resultsActive, setResultsActive] = useState<boolean>(false);
@@ -99,11 +98,12 @@ const UploadPage = () => {
       formData.append("images", image)
     })
 
+    setPageReady(false);
     setUploadActive(true);
-    setFirstUploadMade(true);      // Should always stay true after first upload
     uploadImage(formData)
   }
 
+  // Handler for uploading and receiving 
   const uploadImage = async (imageData: FormData) => {
     // Using temporary URL for now...
     const url: string = "http://127.0.0.1:1000/";
@@ -113,11 +113,16 @@ const UploadPage = () => {
       body: imageData
     }).then(
       async (res) => {
-        res.json().then(data => console.log(data));
+        // Set delay just to visibly show the loading screen for a reasonable amount of time lol
+        // ^ You can remove this delay if you want though, the loading screen will just practically blink in and out of existence
+        await new Promise(resolve => setTimeout(resolve, 4000));
+
+        res.json().then(data => 
+          console.log(data.message)      // Receives image data here, change this to store this somewhere in an element within results popup
+        );
         
         if (res.ok) {
           // alert("Successfully uploaded image(s)!");
-          await new Promise(resolve => setTimeout(resolve, 3500));
           setUploadActive(false);
           setResultsActive(true);
         } else {
@@ -136,12 +141,11 @@ const UploadPage = () => {
   const ResultsModal = ({ children }: Props) => {
     return(
       <div 
-        className={`${!firstUploadMade ? "opacity-0 invisible z-[-1]" : ((uploadActive || resultsActive) ? "bg-anim-in" : "bg-anim-out")}
+        className={`${pageReady ? "opacity-0 invisible z-[-1]" : ((uploadActive || resultsActive) ? "bg-anim-in" : "bg-anim-out")}
           fixed z-10 w-full h-full bg-black/[0.4] px-[100px] flex justify-center`
         }
       >
         {/* Loading Modal */}
-        {/* Duplicate below for another copy of the modal for showing results, such that it displays after loading modal */}
         <div
           className={`${uploadActive ? "modal-anim-in" : "modal-anim-out"}
             ${resultsActive ? "hidden" : (!uploadActive ? "hidden" : "")}
@@ -158,7 +162,7 @@ const UploadPage = () => {
 
         {/* Results Modal */}
         <div
-          className={`${(resultsActive ? "modal-anim-in" : ((uploadActive || !pageReady) ? "hidden" : "modal-anim-out" ))}
+          className={`${(resultsActive ? "modal-anim-in" : ((uploadActive || pageReady) ? "hidden" : "modal-anim-out" ))}
             max-w-[824px] w-full container translate-y-[-5%]
             h-fit min-h-[50%] my-auto bg-white rounded-[48px] 
             border-2 border-[#828282]
@@ -168,15 +172,26 @@ const UploadPage = () => {
           <span className="text-[#4c4c4c] text-[30px] font-bold font-google relative left-[50%] translate-x-[-50%] w-fit tracking-[0.01em]">
             Successfully analyzed images!
           </span>
-          <div className="mt-[20px] w-fit relative left-[50%] translate-x-[-50%] italic">(Cue some sort of scrollable results section here...)</div>
+
+          {/* Add results in here, somehow */}
+          <div className="mt-[20px] w-fit relative left-[50%] translate-x-[-50%] italic">
+            (Cue some sort of scrollable results section here...)
+          </div>
+          
           <button
             className="bg-[#387eed] cursor-pointer
               max-w-[338px] min-h-[51px] h-fit w-full mx-auto mt-[20px]
               bg-[#387eed] rounded-[25px] flex justify-center align-middle
               transition-all ease-in-out focus-visible:outline-none"
-            onClick={() => {
+            onClick={async () => {
+              // Set flags for results popup visibility and page waiting for input (to false and true, respectively)
               setResultsActive(false);
+
+              // Set delay to allow fade out animation to play for results popup
+              await new Promise(resolve => setTimeout(resolve, 500));
               setPageReady(true);
+
+              console.log(`pageReady = ${pageReady}, resultsActive = ${resultsActive}, uploadActive = ${uploadActive}`)
             }}
           >
             <span className="text-center text-white text-md font-bold font-google my-auto">
@@ -240,7 +255,7 @@ const UploadPage = () => {
                 max-w-[138px] min-h-[39px] h-fit w-full mx-auto
                 bg-[#387eed] rounded-[25px] flex justify-center align-middle cursor-pointer
               "
-              // onClick={openFileExplorer}
+              onClick={() => console.log(`pageReady = ${pageReady}, resultsActive = ${resultsActive}, uploadActive = ${uploadActive}`)}
             >
               <span className="text-center text-white text-sm font-bold font-google my-auto cursor-pointer">
                 Browse files...
