@@ -253,7 +253,7 @@ const UploadPage = () => {
                 border border-[#d2d2d2] rounded-[10px] w-full mt-[10px] 
                 max-h-[calc(50px*4)] h-auto overflow-x-hidden`}
             >
-              <table className="w-full h-fit mx-[20px] w-[calc(100%-40px-0.1px)]">
+              <table className="w-full h-fit mx-[20px] w-[calc(100%-40px-0.5px)]">
                 <thead>
                   <tr className=" h-[45px] font-['Inter'] text-[15px] text-[#8b8b8b] border-b border-[#d6d6d6]">
                     <th className="font-normal">
