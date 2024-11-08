@@ -16,7 +16,8 @@ const ImagePopup = ({ imageSrc }: ImagePopupProps) => {
         src={PreviewIcon}
         alt=""
         draggable="false"
-        className="w-7 h-[27px] m-auto select-none cursor-pointer"
+        className="w-7 h-[27px] m-auto select-none cursor-pointer hover:scale-[1.1] 
+          transition-all ease-in-out duration-[0.15s]"
         onClick={() => setIsOpen(true)}
       />
       {isOpen && (
