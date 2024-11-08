@@ -33,6 +33,19 @@
   font-weight: bold;
 }
 
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-VariableFont_opsz,wght.ttf");
+  font-weight: 100 800;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter/Inter-Italic-VariableFont_opsz,wght.ttf");
+  font-style: italic;
+  font-weight: 100 800;
+}
+
 /* Base styles */
 @layer base {
   body {

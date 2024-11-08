@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        google: ["ProductSans", "sans"]
+        google: ["ProductSans", "sans"],
+        body: ["Inter", "sans"]
       },
       boxShadow: {
         "section": "3px 3px 2px rgba(0, 0, 0, 0.20)"

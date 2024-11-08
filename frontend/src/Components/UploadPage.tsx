@@ -188,7 +188,7 @@ const UploadPage = () => {
     const fileName = shortenFileName(name);
 
     return (
-      <tr className="h-[50px] border-b border-[#e9e9e9]">
+      <tr className="h-[50px] border-b border-[#e9e9e9] font-body">
         <td>
           <ImagePopup imageSrc={ file ? URL.createObjectURL(file) : FileNotFoundIcon}></ImagePopup>
         </td>
@@ -255,7 +255,7 @@ const UploadPage = () => {
             >
               <table className="w-full h-fit mx-[20px] w-[calc(100%-40px-0.5px)]">
                 <thead>
-                  <tr className=" h-[45px] font-['Inter'] text-[15px] text-[#8b8b8b] border-b border-[#d6d6d6]">
+                  <tr className=" h-[45px] font-body text-[15px] text-[#8b8b8b] border-b border-[#d6d6d6]">
                     <th className="font-normal">
                       Preview
                     </th>
@@ -268,7 +268,7 @@ const UploadPage = () => {
                     {/* <th>Confidence Value</th>  <-- not implemented for now */}      
                   </tr>
                 </thead>
-                <tbody className="max-h-[calc(50px*4)] h-auto font-['Inter'] text-[#1f1f1f] text-[14px]">
+                <tbody className="max-h-[calc(50px*4)] h-auto font-body text-[#1f1f1f] text-[14px]">
                   {results.map((imgResult, index) => {
                     let file = (images[index].name == imgResult.name) ? images[index] : undefined;
                     return <ResultsEntry key={`${imgResult.name}-${index}-result`} file={file} name={imgResult.name} label={imgResult.label} />
@@ -343,11 +343,11 @@ const UploadPage = () => {
               className="w-[81px] h-auto mx-auto mb-[26px] select-none"
             />
 
-            <span className="text-center text-[#4c4c4c] text-base font-bold font-['Inter'] mx-[30px]">
+            <span className="text-center text-[#4c4c4c] text-base font-bold font-body mx-[30px]">
               Drag & drop files to upload
             </span>
 
-            <span className="text-center text-[#4c4c4c] text-sm font-normal font-['Inter']">
+            <span className="text-center text-[#4c4c4c] text-sm font-normal font-body">
               or
             </span>
 
@@ -456,7 +456,7 @@ const UploadPage = () => {
                   <PreviewCapsule key={`${image}-${index}`} file={image} fileIndex={index} />
                 ))
               ) : (
-                <span className="w-full px-[30px] text-center text-black text-[17px] font-extralight italic font-['Inter']">
+                <span className="w-full px-[30px] text-center text-black text-[17px] font-extralight italic font-body">
                   There are no files to preview...
                 </span>
               )}
