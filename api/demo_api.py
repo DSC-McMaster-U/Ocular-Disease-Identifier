@@ -6,7 +6,7 @@ from PIL import Image
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
-from preprocess import preprocess_image
+# from preprocess import preprocess_image
 import numpy as np
 import cv2
 from tensorflow import keras

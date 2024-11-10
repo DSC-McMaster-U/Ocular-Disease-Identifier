@@ -1,0 +1,6 @@
+Flask==3.0.3
+flask_cors==5.0.0
+numpy<2.1.0
+Pillow==11.0.0
+preprocess==2.0.0
+tensorflow==2.18.0
