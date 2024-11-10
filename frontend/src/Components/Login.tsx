@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { User } from "../Models/user";
-import { signUpHandler } from "../Network/registerLogin";
+import { loginHandler } from "../Network/registerLogin";
 import GoogleLogo from "../vendor/img/Global/GoogleLogo.svg";
 import HidePassword from "../vendor/img/SignUp/eye (1).svg";
 import Header from "./Header";
 
-const SignUp = () => {
-  const { register, watch, handleSubmit } = useForm<User>();
+const Login = () => {
+  const { register, handleSubmit } = useForm<User>();
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const onSubmit: SubmitHandler<User> = async (user: User) => {
     setButtonDisabled(true);
-    const response = await signUpHandler(user);
+    const response = await loginHandler(user);
     if (!response || response.error) {
       console.error("Error:", response.error);
     } else {
@@ -29,7 +29,7 @@ const SignUp = () => {
           <div className="w-[480px] h-fit border-[#585858] border rounded-[15px] m-auto mt-[155px] bg-white shadow-section">
             <div className="flex flex-row flex-wrap">
               <h2 className="w-full mt-8 font-thin font-google text-[20px] text-center">
-                Create an Account
+                Login
               </h2>
 
               <div className="w-full h-[50px] flex mt-3">
@@ -71,24 +71,6 @@ const SignUp = () => {
                     alt=""
                   />
                 </div>
-                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] flex ">
-                  {/* Fix the background color of the input text not matching the general background color later */}
-                  <input
-                    className="w-[95%] h-full  focus:outline-none focus:border-none ml-2 justify-self"
-                    {...register("confirmPassword", {
-                      required: true,
-                      minLength: 8,
-                      validate: (value) => value === watch("password"),
-                    })}
-                    placeholder="Confirm Password"
-                    type="text"
-                  />
-                  <img
-                    src={HidePassword}
-                    className=" max-w-4  ml-2 mr-4"
-                    alt=""
-                  />
-                </div>
               </div>
 
               <div className="w-full m-10 h-12 flex justify-center align-center ">
@@ -98,7 +80,7 @@ const SignUp = () => {
                   className=" bg-[#4285F4] text-[#FFFF] w-[60%] border-[2px] rounded-[8px] text-[17px] hover:cursor-pointer"
                   name=""
                   id=""
-                  value="Sign Up"
+                  value="Login"
                 />
               </div>
             </div>
@@ -109,4 +91,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;

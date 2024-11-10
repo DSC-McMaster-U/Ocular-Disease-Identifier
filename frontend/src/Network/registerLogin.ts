@@ -39,3 +39,21 @@ export const signUpHandler = async ({
     return { error: error };
   }
 };
+
+export const loginHandler = async ({ email, password }: User) => {
+  // Temp url for testing
+  const url: string = "http://127.0.0.1";
+  try {
+    const response = await fetchData(url + "/signup", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.json();
+  } catch (error) {
+    console.error("Error:", error);
+    return { error: error };
+  }
+};
