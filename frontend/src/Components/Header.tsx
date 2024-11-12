@@ -5,9 +5,13 @@ const Header = () => {
     <nav className="w-full h-[57px] pl-[22px] pr-[55px] gap-[78px] fixed top-0 start-0 z-10 flex items-center justify-between bg-white drop-shadow-md">
       {/* Header Logo */}
       <div className="shrink-0">
-        <a href="/" className="flex gap-[14px]">    {/* Temporary reroute back to image upload page... for now*/}
+        <a href="/" className="flex gap-[14px]">
+          {" "}
+          {/* Temporary reroute back to image upload page... for now*/}
           <img src={NavLogo} alt="" className="w-[63px] h-[31px]" />
-          <span className="text-[#5d6166] text-[23px] font-normal font-google hidden sm:block">Ocular Disease Identifier</span>
+          <span className="text-[#5d6166] text-[23px] font-normal font-google hidden sm:block">
+            Ocular Disease Identifier
+          </span>
         </a>
       </div>
 
@@ -37,7 +41,7 @@ const Header = () => {
 
         {/* Authentication Nav Links */}
         <ul className="w-min h-max flex gap-[23px]">
-          <a href="/signup">
+          <a href="/login">
             <li className="font-navlink text-[#277be9] px-[10px] py-[4px] rounded-md hover:bg-[#e8f0fe] hover:text-[#1a73e8] transition ease-linear duration-[0.125s]">
               Login
             </li>
@@ -50,7 +54,7 @@ const Header = () => {
         </ul>
       </div>
     </nav>
-  )
+  );
 };
 
 export default Header;
