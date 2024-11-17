@@ -22,7 +22,7 @@ const Header = () => {
       <div className="w-full h-[21px] flex justify-between items-center shrink">
         {/* Middle Primary Nav Links */}
         <ul className="w-min h-[21px] flex gap-[33px]">
-          <a href="">
+          <a href="/user/dashboard">
             <li className="font-navlink after:anim-navlink after:hover:anim-navlink-hover text-[#5d6166]">
               Home
             </li>
