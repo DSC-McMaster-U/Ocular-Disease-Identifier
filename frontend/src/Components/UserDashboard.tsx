@@ -8,17 +8,15 @@ import rightArrow from "../vendor/img/UserDashboard/right_arrow.svg";
 import leftArrow from "../vendor/img/UserDashboard/left_arrow.svg";
 import { Profile } from "../Models/user";
 import { useState } from "react";
+import { Patient } from "../Models/patient";
 import Card from "./Card";
+import Table from "./Table";
 
 const UserDashboard = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
+
   //Temperary placeholder data for recent scans
-  const scans: {
-    person: string;
-    condition: string;
-    date: string;
-    confidence: number;
-  }[] = [
+  const scans: Patient[] = [
     {
       person: "Adam Peterson",
       condition: "Pathological Myopia",
@@ -174,7 +172,7 @@ const UserDashboard = () => {
                 {/* Card Content */}
                 <Card
                   person={scans[currentIndex].person}
-                  title={scans[currentIndex].condition}
+                  condition={scans[currentIndex].condition}
                   date={scans[currentIndex].date}
                   confidence={scans[currentIndex].confidence}
                 ></Card>
@@ -193,8 +191,10 @@ const UserDashboard = () => {
                 {scans.map((_, index) => (
                   <span
                     key={index}
-                    className={`h-2 w-2 rounded-full ${
-                      currentIndex === index ? "bg-[#1D4ED8]" : "bg-gray-300"
+                    className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                      currentIndex === index
+                        ? "bg-[#1D4ED8] scale-125"
+                        : "bg-gray-300 scale-100"
                     }`}
                   ></span>
                 ))}
@@ -214,10 +214,7 @@ const UserDashboard = () => {
           </div>
           {/* Bottom Section */}
           <div className="mt-12">
-            <h2 className="text-lg font-bold">Client Profiles at a Glance</h2>
-            <div className="mt-6 bg-[#FFFFFF] rounded-md shadow p-6">
-              {/* Placeholder for table or content */}
-            </div>
+            <Table patients={scans}></Table>
           </div>
         </main>
       </div>
