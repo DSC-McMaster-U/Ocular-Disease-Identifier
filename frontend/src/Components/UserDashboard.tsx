@@ -8,9 +8,64 @@ import rightArrow from "../vendor/img/UserDashboard/right_arrow.svg";
 import leftArrow from "../vendor/img/UserDashboard/left_arrow.svg";
 import { Profile } from "../Models/user";
 import { useState } from "react";
+import Card from "./Card";
 
 const UserDashboard = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
+  //Temperary placeholder data for recent scans
+  const scans: {
+    person: string;
+    condition: string;
+    date: string;
+    confidence: number;
+  }[] = [
+    {
+      person: "Adam Peterson",
+      condition: "Pathological Myopia",
+      date: "11/19/2024",
+      confidence: 0.93,
+    },
+    {
+      person: "Jane Doe",
+      condition: "Glaucoma",
+      date: "11/15/2024",
+      confidence: 0.89,
+    },
+    {
+      person: "John Smith",
+      condition: "Cataract",
+      date: "11/10/2024",
+      confidence: 0.95,
+    },
+    {
+      person: "Emily Davis",
+      condition: "Diabetic Retinopathy",
+      date: "11/05/2024",
+      confidence: 0.91,
+    },
+    {
+      person: "Michael Brown",
+      condition: "Macular Degeneration",
+      date: "11/01/2024",
+      confidence: 0.92,
+    },
+  ];
+
+  // State to track the currently displayed card
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Handler for navigation buttons
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? scans.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === scans.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -109,40 +164,40 @@ const UserDashboard = () => {
               {/* Content Wrapper */}
               <div className="relative flex items-center justify-center w-full">
                 {/* Left Arrow */}
-                <button className="absolute left-0 text-gray-400 hover:text-gray-600">
+                <button
+                  onClick={handlePrev}
+                  className="absolute left-0 text-gray-400 hover:text-gray-600"
+                >
                   <img src={leftArrow} alt="" />
                 </button>
 
                 {/* Card Content */}
-                <div className="bg-[#F8F8F8] rounded-[15px] shadow-md border border-[#727272] p-6 w-[80%]">
-                  <p className="text-sm font-bold">Adam Peterson</p>
-                  <p className="text-base font-semibold text-[#333333] mt-2">
-                    Pathological Myopia
-                  </p>
-                  <p className="text-xs text-[#999999] mt-2">
-                    Date: 11/19/2024
-                  </p>
-                  <p className="text-xs text-[#999999]">
-                    Confidence Value: 0.93
-                  </p>
-                  <button className="mt-4 px-4 py-2 bg-[#1D4ED8] text-white text-xs font-semibold rounded">
-                    Go to Scan
-                  </button>
-                </div>
+                <Card
+                  person={scans[currentIndex].person}
+                  title={scans[currentIndex].condition}
+                  date={scans[currentIndex].date}
+                  confidence={scans[currentIndex].confidence}
+                ></Card>
 
                 {/* Right Arrow */}
-                <button className="absolute right-0 text-gray-400 hover:text-gray-600">
+                <button
+                  onClick={handleNext}
+                  className="absolute right-0 text-gray-400 hover:text-gray-600"
+                >
                   <img src={rightArrow} alt="" />
                 </button>
               </div>
 
               {/* Pagination Dots */}
               <div className="flex space-x-2 mt-4">
-                <span className="h-2 w-2 bg-[#1D4ED8] rounded-full"></span>
-                <span className="h-2 w-2 bg-gray-300 rounded-full"></span>
-                <span className="h-2 w-2 bg-gray-300 rounded-full"></span>
-                <span className="h-2 w-2 bg-gray-300 rounded-full"></span>
-                <span className="h-2 w-2 bg-gray-300 rounded-full"></span>
+                {scans.map((_, index) => (
+                  <span
+                    key={index}
+                    className={`h-2 w-2 rounded-full ${
+                      currentIndex === index ? "bg-[#1D4ED8]" : "bg-gray-300"
+                    }`}
+                  ></span>
+                ))}
               </div>
             </div>
             {/* Card 2 */}
