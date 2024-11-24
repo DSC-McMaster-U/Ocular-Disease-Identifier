@@ -3,3 +3,9 @@ export interface User {
   password: string;
   confirmPassword: string;
 }
+
+export interface Profile {
+  user: User;
+  profilePic?: string;
+  username?: string;
+}
