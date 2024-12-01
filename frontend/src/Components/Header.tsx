@@ -2,7 +2,7 @@ import NavLogo from "../vendor/img/Header/gdsc-logo.png";
 
 const Header = () => {
   return (
-    <nav className="w-full h-[57px] pl-[22px] pr-[55px] gap-[78px] fixed top-0 start-0 z-10 flex items-center justify-between bg-white drop-shadow-md">
+    <nav className="w-full h-[57px] pl-[22px] pr-[55px] gap-[78px] fixed top-0 start-0 z-10 flex items-center justify-between bg-white drop-shadow-md border border-[#d2d2d2]">
       {/* Header Logo */}
       <div className="shrink-0">
         <a href="/" className="flex gap-[14px]">

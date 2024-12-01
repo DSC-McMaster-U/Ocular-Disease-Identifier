@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Patient } from "../Models/patient";
+import { Patient } from "../../Models/patient";
 
 const Table: React.FC<{ patients: Patient[] }> = ({ patients }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -8,10 +8,10 @@ const Table: React.FC<{ patients: Patient[] }> = ({ patients }) => {
     patient.person.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
-    <div className="bg-white rounded-[15px] border-2 border-[#F1C40F] p-6 shadow-md w-full  mx-auto">
+    <div className="bg-white rounded-[15px] border-2 border-[#F1C40F] py-[25px] px-[42px] shadow-md w-full mx-auto">
       {/* Title Row with Search */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-800">
+      <div className="flex lg:flex-row lg:gap-0 flex-col gap-[15px] items-center justify-between mb-[24px]">
+        <h2 className="self-start text-[#2d2d2d] text-[23px] font-normal font-google">
           Client Profiles at a Glance
         </h2>
         <input
@@ -19,7 +19,7 @@ const Table: React.FC<{ patients: Patient[] }> = ({ patients }) => {
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="px-3 py-1 text-sm border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F1C40F]"
+          className="lg:w-auto xl:max-w-none lg:max-w-[160px] w-full px-3 py-1 text-sm border font-body border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F1C40F]"
         />
       </div>
 

@@ -144,6 +144,22 @@ body,
     animation: bellShake 0.75s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
 
+  .slide-left-exit-anim {
+    animation: slideOutLeft 0.25s cubic-bezier(0, 0, 0.09, 1) forwards;
+  }
+
+  .slide-right-exit-anim {
+    animation: slideOutRight 0.25s cubic-bezier(0, 0, 0.09, 1) forwards;
+  }
+
+  .slide-left-enter-anim {
+    animation: slideInLeft 0.45s cubic-bezier(0.52, 0, 0.22, 1.42) forwards;
+  }
+
+  .slide-right-enter-anim {
+    animation: slideInRight 0.45s cubic-bezier(0.52, 0, 0.22, 1.42) forwards;
+  }
+
   /* All Animation Keyframes */
   @keyframes fadeIn {
     0% {
@@ -177,6 +193,7 @@ body,
     }
   }
 
+  /* Upload page popup modal animations */
   @keyframes riseIn {
     0% {
       opacity: 0;
@@ -229,4 +246,58 @@ body,
       transform: rotate(0);
     }
   }
+
+  /* Dashboard page - main body card swapping animations */
+  @keyframes slideOutLeft {
+    0% {
+      margin-left: 0;
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      margin-left: -100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideInRight {
+    0% {
+      margin-left: 100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      margin-left: 0px;
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOutRight {
+    0% {
+      margin-left: 0;
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      margin-left: 100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideInLeft {
+    0% {
+      margin-left: -100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      margin-left: 0px;
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
 }
