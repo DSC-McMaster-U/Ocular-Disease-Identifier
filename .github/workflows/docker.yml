@@ -1,0 +1,39 @@
+name: "Push Docker image to Artifact Registry"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.PROJECT_ID }}
+          install_components: docker
+    
+      - name: Authenticate Docker with GCP
+        run: gcloud auth configure-docker northamerica-northeast2-docker.pkg.dev
+
+      - name: Build and Push Docker image
+        run: |
+          docker build --platform linux/amd64 -t flask-api:latest .
+          docker tag flask-api:latest northamerica-northeast2-docker.pkg.dev/ocular-disease-identifier/flask-api/flask-api:latest
+          docker push northamerica-northeast2-docker.pkg.dev/ocular-disease-identifier/flask-api/flask-api:latest
+    
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy flask-api \
+            --image northamerica-northeast2-docker.pkg.dev/ocular-disease-identifier/flask-api/flask-api:latest \
+            --region northamerica-northeast2 \
+            --platform managed
