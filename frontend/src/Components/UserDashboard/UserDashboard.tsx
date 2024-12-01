@@ -136,7 +136,7 @@ const UserDashboard = () => {
           {/* Card 1 */}
           <div className="flex flex-col bg-white rounded-[20px] border-2 border-[#00B894] py-[25px] px-[32px] shadow-sm items-center relative">
             <h2 className="self-start text-[#2d2d2d] text-[23px] ml-[10px] font-normal font-google">
-              Previous Five Scans
+              Latest Five Scans
             </h2>
             {/* Content Wrapper */}
             <div className="relative flex items-center justify-center w-full mt-[20px]">
@@ -194,7 +194,7 @@ const UserDashboard = () => {
           {/* Card 2 */}
           <div className="flex flex-col justify-between bg-[#FFFFFF] rounded-[20px] border-2 border-[#D63031] py-[25px] px-[42px] shadow-sm">
             <h2 className="self-start text-[#2d2d2d] text-[23px] font-normal font-google">
-              Total Uploads in the Past Week
+              This Week's Total Uploads
             </h2>
             <p className="text-[92px] font-bold font-google">14</p>
             <p className="text-[#666666] text-[16px] font-light font-body mb-[21px] mt-[10px]">
