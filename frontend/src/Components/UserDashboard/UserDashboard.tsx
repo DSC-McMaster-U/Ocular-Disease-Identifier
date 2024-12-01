@@ -173,11 +173,18 @@ const UserDashboard = () => {
                       ? "bg-[#387EED] scale-125"
                       : "bg-gray-300 scale-100"
                   }`}
-                  onClick={() => {
+                  onClick={async () => {
+                    if (index == currentIndex) {
+                      return;
+                    }
+                    
                     // CurrentIndex - index < 0 => switching to next card (play enter from left animation);
                     // CurrentIndex - index > 0 => switching to prev. card (play enter from right animation)
-                    setCardAnim((currentIndex - index) < 0 ? "slide-left-enter-anim" : "slide-right-enter-anim");
+                    setCardAnim((currentIndex - index) < 0 ? "slide-right-exit-anim" : "slide-left-exit-anim");
+                    await new Promise((resolve) => setTimeout(resolve, 250));
                     setCurrentIndex(index);
+
+                    setCardAnim((currentIndex - index) < 0 ? "slide-left-enter-anim" : "slide-right-enter-anim");
                   }}
                 ></span>
               ))}
