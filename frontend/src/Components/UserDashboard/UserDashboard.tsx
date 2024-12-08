@@ -7,17 +7,21 @@ import currentPatients from "../../vendor/img/UserDashboard/current_patients_ico
 import rightArrow from "../../vendor/img/UserDashboard/right_arrow.svg";
 import leftArrow from "../../vendor/img/UserDashboard/left_arrow.svg";
 import { Profile } from "../../Models/user";
-import { MouseEventHandler, useState } from "react";
+import { useState } from "react";
 import { Patient } from "../../Models/patient";
 import Card from "./Card";
 import Table from "./Table";
+import SubMenuTab from "./SubMenuTab";
 
 const UserDashboard = () => {
   // Submenu tab constants + useStates
   const numGeneralTabs = 4;
   const numPersonalTabs = 1;
-  const [subMenuTab, setSubMenuTab] = useState<boolean[]>([true, ...Array(numGeneralTabs + numPersonalTabs - 1).fill(false)])
-  
+  const [subMenuTab, setSubMenuTab] = useState<boolean[]>([
+    true,
+    ...Array(numGeneralTabs + numPersonalTabs - 1).fill(false),
+  ]);
+
   const [profile, setProfile] = useState<Profile | null>(null);
 
   // Temporary placeholder data for recent scans
@@ -83,43 +87,50 @@ const UserDashboard = () => {
 
   // Handler for switching submenu tabs & body content
   const handleTabClick = (index: number) => {
-    if (index < 0 || index >= (numGeneralTabs + numPersonalTabs)) {
-      console.log("Error: Invalid index provided for selection of submenu tabs... defaulting to first menu");
-      setSubMenuTab(
-        [true, ...Array(numGeneralTabs + numPersonalTabs - 1).fill(false)]
+    if (index < 0 || index >= numGeneralTabs + numPersonalTabs) {
+      console.log(
+        "Error: Invalid index provided for selection of submenu tabs... defaulting to first menu"
       );
+      setSubMenuTab([
+        true,
+        ...Array(numGeneralTabs + numPersonalTabs - 1).fill(false),
+      ]);
     } else {
-      setSubMenuTab(
-        [
-          ...Array(index).fill(false), 
-          true,
-          ...Array(numGeneralTabs + numPersonalTabs - (index + 1)).fill(false), 
-        ]
-      );
+      setSubMenuTab([
+        ...Array(index).fill(false),
+        true,
+        ...Array(numGeneralTabs + numPersonalTabs - (index + 1)).fill(false),
+      ]);
     }
-  }
+  };
 
   // Main dashboard body component (you can probably move this into a separate component file)
   const MainDashboard = () => {
-    return(
+    return (
       <>
         {/* Header text */}
         <div className="mt-[71px]">
-          <h1 className="text-[45px] font-bold text-[#2c2c2c] font-google tracking-wide">Welcome, Dr. Sam!</h1>
+          <h1 className="text-[45px] font-bold text-[#2c2c2c] font-google tracking-wide">
+            Welcome, Dr. Sam!
+          </h1>
           <p className="text-2xl font-body mt-[12px] text-[#666666]">
             Look over your most{" "}
-            <a 
+            <a
               href="#"
               className="text-[#387EED] underline"
-              onClick={() => {handleTabClick(1)}}
+              onClick={() => {
+                handleTabClick(1);
+              }}
             >
               recent scans
             </a>{" "}
             or view{" "}
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="text-[#387EED] underline"
-              onClick={() => {handleTabClick(2)}}
+              onClick={() => {
+                handleTabClick(2);
+              }}
             >
               patients by profile
             </a>
@@ -127,7 +138,7 @@ const UserDashboard = () => {
           </p>
         </div>
 
-        <div 
+        <div
           className="
             xl:grid xl:grid-cols-2 xl:gap-8 mt-[42px]
             flex flex-col gap-[42px]
@@ -149,10 +160,7 @@ const UserDashboard = () => {
               </button>
 
               {/* Card Content */}
-              <Card
-                patient={scans[currentIndex]}
-                anim={cardAnim}
-              ></Card>
+              <Card patient={scans[currentIndex]} anim={cardAnim}></Card>
 
               {/* Right Arrow */}
               <button
@@ -177,14 +185,22 @@ const UserDashboard = () => {
                     if (index == currentIndex) {
                       return;
                     }
-                    
+
                     // CurrentIndex - index < 0 => switching to next card (play enter from left animation);
                     // CurrentIndex - index > 0 => switching to prev. card (play enter from right animation)
-                    setCardAnim((currentIndex - index) < 0 ? "slide-right-exit-anim" : "slide-left-exit-anim");
+                    setCardAnim(
+                      currentIndex - index < 0
+                        ? "slide-right-exit-anim"
+                        : "slide-left-exit-anim"
+                    );
                     await new Promise((resolve) => setTimeout(resolve, 250));
                     setCurrentIndex(index);
 
-                    setCardAnim((currentIndex - index) < 0 ? "slide-left-enter-anim" : "slide-right-enter-anim");
+                    setCardAnim(
+                      currentIndex - index < 0
+                        ? "slide-left-enter-anim"
+                        : "slide-right-enter-anim"
+                    );
                   }}
                 ></span>
               ))}
@@ -208,34 +224,36 @@ const UserDashboard = () => {
           <Table patients={scans}></Table>
         </div>
       </>
-    )
-  }
+    );
+  };
 
   // All dashboard bodies, accessible through their selected index (equal to their submenu tab index number)
   // Note: Most of the submenu ideas are placeholders for now; feel free to replace them with better ideas
   //       down the line, or create the related components for them
   const dashboardBodies = [
-    <MainDashboard />,   // Submenu tab #1 - Dashboard
-    <div />,             // Submenu tab #2 - Recent Scans
-    <div />,             // Submenu tab #3 - Current Patients
-    <div />,             // Submenu tab #4 - Add a Patient
-    <div />              // Submenu tab #5 - My Profile
-  ]
+    <MainDashboard />, // Submenu tab #1 - Dashboard
+    <div />, // Submenu tab #2 - Recent Scans
+    <div />, // Submenu tab #3 - Current Patients
+    <div />, // Submenu tab #4 - Add a Patient
+    <div />, // Submenu tab #5 - My Profile
+  ];
 
   // Function to select and display dashboard body, based on subtab selected
   const getDashboardBody = () => {
     for (const [index, tabStatus] of subMenuTab.entries()) {
-      console.log(`Index ${index}: ${tabStatus}`)
+      console.log(`Index ${index}: ${tabStatus}`);
       if (tabStatus) {
-        console.log(`Switching to dashboard menu #${index}...`)
-        return dashboardBodies[index]
+        console.log(`Switching to dashboard menu #${index}...`);
+        return dashboardBodies[index];
       }
-    } 
+    }
 
     // In case of an error state where no true values are detected, return top dashboard menu by default
-    console.log("Error: No selected tab detected! (Check for an issue with 'subMenuTab' indices)")
-    return dashboardBodies[0]
-  }
+    console.log(
+      "Error: No selected tab detected! (Check for an issue with 'subMenuTab' indices)"
+    );
+    return dashboardBodies[0];
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -244,7 +262,7 @@ const UserDashboard = () => {
 
       <div className="flex flex-1 h-full pt-[57px] relative">
         {/* Sidebar */}
-        <aside 
+        <aside
           className="
             fixed h-full w-[345px] bg-[#FFFFFF] shadow-md pt-[40px] border-r-2 border-[#d2d2d2]
             flex flex-col justify-between gap-[20px]
@@ -277,72 +295,56 @@ const UserDashboard = () => {
             <nav className="relative">
               {/* General Submenu */}
               <div className="mb-[28px]">
-                <h3 className="text-[13px] font-body font-extralight text-[#2d2d2d] uppercase mx-auto mb-[11px] max-w-[80%]">General</h3>
-                <a
+                <h3 className="text-[13px] font-body font-extralight text-[#2d2d2d] uppercase mx-auto mb-[11px] max-w-[80%]">
+                  General
+                </h3>
+                <SubMenuTab
+                  onInteract={handleTabClick}
+                  index={0}
+                  isSelected={subMenuTab[0]}
+                  img={dashboardIcon}
+                  name={"Dashboard"}
                   href="#"
-                  draggable="false"
-                  className={`
-                    ${subMenuTab[0] ? "bg-[#c0dafd]" : "hover:bg-[#F1EFEF]"}
-                    flex items-center font-google text-[#333333] h-[61px] px-[10%] gap-[20px] transition-all duration-200
-                  `}
-                  onClick={() => {handleTabClick(0)}}
-                >
-                  <img src={dashboardIcon} className="w-[35px] h-auto" alt="" />
-                  <span className="text-[17px]">Dashboard</span>
-                </a>
-                <a
+                ></SubMenuTab>
+                <SubMenuTab
+                  onInteract={handleTabClick}
+                  index={1}
+                  isSelected={subMenuTab[1]}
+                  img={recentScans}
+                  name={"Recent Scans"}
                   href="#"
-                  draggable="false"
-                  className={`
-                    ${subMenuTab[1] ? "bg-[#c0dafd]" : "hover:bg-[#F1EFEF]"}
-                    flex items-center font-google text-[#333333] h-[61px] px-[10%] gap-[20px] transition-all duration-200
-                  `}
-                  onClick={() => {handleTabClick(1)}}
-                >
-                  <img src={recentScans} className="w-[35px] h-auto" alt="" />
-                  <span className="text-[17px]">Recent Scans</span>
-                </a>
-                <a
+                ></SubMenuTab>
+                <SubMenuTab
+                  onInteract={handleTabClick}
+                  index={2}
+                  isSelected={subMenuTab[2]}
+                  img={currentPatients}
+                  name={"Current Patients"}
                   href="#"
-                  draggable="false"
-                  className={`
-                    ${subMenuTab[2] ? "bg-[#c0dafd]" : "hover:bg-[#F1EFEF]"}
-                    flex items-center font-google text-[#333333] h-[61px] px-[10%] gap-[20px] transition-all duration-200
-                  `}
-                  onClick={() => {handleTabClick(2)}}
-                >
-                  <img src={currentPatients} className="w-[35px] h-auto" alt="" />
-                  <span className="text-[17px]">Current Patients</span>
-                </a>
-                <a
+                ></SubMenuTab>
+                <SubMenuTab
+                  onInteract={handleTabClick}
+                  index={3}
+                  isSelected={subMenuTab[3]}
+                  img={addPatient}
+                  name={"Add Patients"}
                   href="#"
-                  draggable="false"
-                  className={`
-                    ${subMenuTab[3] ? "bg-[#c0dafd]" : "hover:bg-[#F1EFEF]"}
-                    flex items-center font-google text-[#333333] h-[61px] px-[10%] gap-[20px] transition-all duration-200
-                  `}
-                  onClick={() => {handleTabClick(3)}}
-                >
-                  <img src={addPatient} className="w-[35px] h-auto" alt="" />
-                  <span className="text-[17px]">Add a Patient</span>
-                </a>
+                ></SubMenuTab>
               </div>
 
               {/* Personal Submenu */}
               <div>
-                <h3 className="text-[13px] font-body font-extralight text-[#2d2d2d] uppercase mx-auto mb-[11px] max-w-[80%]">Personal</h3>
-                <a
+                <h3 className="text-[13px] font-body font-extralight text-[#2d2d2d] uppercase mx-auto mb-[11px] max-w-[80%]">
+                  Personal
+                </h3>
+                <SubMenuTab
+                  onInteract={handleTabClick}
+                  index={4}
+                  isSelected={subMenuTab[4]}
+                  img={addPatient}
+                  name={"My Profile"}
                   href="#"
-                  draggable="false"
-                  className={`
-                    ${subMenuTab[4] ? "bg-[#c0dafd]" : "hover:bg-[#F1EFEF]"}
-                    flex items-center font-google text-[#333333] h-[61px] px-[10%] gap-[20px] transition-all duration-200
-                  `}
-                  onClick={() => {handleTabClick(4)}}              
-                >
-                  <img src={dashboardIcon} alt="" />
-                  <span className="text-[17px]">My Profile</span>
-                </a>
+                ></SubMenuTab>
               </div>
             </nav>
           </div>
