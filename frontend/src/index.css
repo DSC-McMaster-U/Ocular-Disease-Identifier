@@ -8,6 +8,20 @@
  * ========
 **/
 
+/* Ensure the root elements take up the full viewport height */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0; /* Remove default margin */
+  padding: 0;
+}
+
+/* Set box-sizing for consistent sizing behavior */
+* {
+  box-sizing: border-box;
+}
+
 /* Product Sans (Google's Logo Font) */
 @font-face {
   font-family: "ProductSans";
@@ -76,9 +90,9 @@
 /* Custom component classes - mostly ones with complex or many attributes */
 @layer components {
   .font-navlink {
-    font-size: 16px; 
-    font-family: "ProductSans"; 
-    font-weight: 400; 
+    font-size: 16px;
+    font-family: "ProductSans";
+    font-weight: 400;
     text-wrap: nowrap;
     position: relative;
   }
@@ -94,7 +108,7 @@
     bottom: -15px;
     left: 0;
 
-    background-color: #5F6368;
+    background-color: #5f6368;
     transition: all 0.25s ease;
     transform: scaleX(0);
   }
@@ -105,7 +119,7 @@
 
   .dashed-box {
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='48' ry='48' stroke='%23A1C5FEFF' stroke-width='8' stroke-dasharray='6%2c 22' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
-    border: 0px solid rgba(161,197,254,1);
+    border: 0px solid rgba(161, 197, 254, 1);
     border-radius: 48px;
     transition: all 0.2s ease-in-out;
   }
@@ -127,74 +141,163 @@
   }
 
   .shake-anim {
-    animation: bellShake 0.75s cubic-bezier(.36,.07,.19,.97) both;
+    animation: bellShake 0.75s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  .slide-left-exit-anim {
+    animation: slideOutLeft 0.25s cubic-bezier(0, 0, 0.09, 1) forwards;
+  }
+
+  .slide-right-exit-anim {
+    animation: slideOutRight 0.25s cubic-bezier(0, 0, 0.09, 1) forwards;
+  }
+
+  .slide-left-enter-anim {
+    animation: slideInLeft 0.45s cubic-bezier(0.52, 0, 0.22, 1.42) forwards;
+  }
+
+  .slide-right-enter-anim {
+    animation: slideInRight 0.45s cubic-bezier(0.52, 0, 0.22, 1.42) forwards;
   }
 
   /* All Animation Keyframes */
   @keyframes fadeIn {
-    0% { 
+    0% {
       opacity: 0;
       visibility: hidden;
-      z-index: -1; 
+      z-index: -1;
     }
     5% {
       opacity: 0;
       visibility: visible;
       z-index: 10;
     }
-    100% { 
-      opacity: 1; 
+    100% {
+      opacity: 1;
     }
   }
 
   @keyframes fadeOut {
-    0% { 
-      opacity: 1; 
+    0% {
+      opacity: 1;
       visibility: visible;
       z-index: 10;
     }
     95% {
       opacity: 0;
     }
-    100% { 
-      opacity: 0; 
+    100% {
+      opacity: 0;
       visibility: hidden;
       z-index: -1;
     }
   }
 
+  /* Upload page popup modal animations */
   @keyframes riseIn {
-    0% { 
-      opacity: 0; 
+    0% {
+      opacity: 0;
       transform: translateY(-5%);
     }
-    100% { 
-      opacity: 1; 
+    100% {
+      opacity: 1;
       transform: translateY(-10%);
     }
   }
 
   @keyframes riseOut {
-    0% { 
-      opacity: 1; 
+    0% {
+      opacity: 1;
       transform: translateY(-10%);
     }
-    100% { 
-      opacity: 0; 
+    100% {
+      opacity: 0;
       transform: translateY(-5%);
     }
   }
 
   /* Shaking animation for some icons */
   @keyframes bellShake {
-    0% { transform: rotate(0); }
-    15% { transform: rotate(5deg); }
-    30% { transform: rotate(-5deg); }
-    45% { transform: rotate(4deg); }
-    60% { transform: rotate(-4deg); }
-    75% { transform: rotate(2deg); }
-    85% { transform: rotate(-2deg); }
-    92% { transform: rotate(1deg); }
-    100% { transform: rotate(0); }
-}
+    0% {
+      transform: rotate(0);
+    }
+    15% {
+      transform: rotate(5deg);
+    }
+    30% {
+      transform: rotate(-5deg);
+    }
+    45% {
+      transform: rotate(4deg);
+    }
+    60% {
+      transform: rotate(-4deg);
+    }
+    75% {
+      transform: rotate(2deg);
+    }
+    85% {
+      transform: rotate(-2deg);
+    }
+    92% {
+      transform: rotate(1deg);
+    }
+    100% {
+      transform: rotate(0);
+    }
+  }
+
+  /* Dashboard page - main body card swapping animations */
+  @keyframes slideOutLeft {
+    0% {
+      margin-left: 0;
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      margin-left: -100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideInRight {
+    0% {
+      margin-left: 100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      margin-left: 0px;
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideOutRight {
+    0% {
+      margin-left: 0;
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      margin-left: 100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideInLeft {
+    0% {
+      margin-left: -100px;
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    100% {
+      margin-left: 0px;
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
 }

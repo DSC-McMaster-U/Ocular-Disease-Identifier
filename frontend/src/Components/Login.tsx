@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, SubmitErrorHandler, useForm } from "react-hook-form";
 import { User } from "../Models/user";
 import { loginHandler } from "../Network/registerLogin";
 import GoogleLogo from "../vendor/img/Global/GoogleLogo.svg";
 import HidePassword from "../vendor/img/SignUp/eye (1).svg";
+import ShowPassword from "../vendor/img/SignUp/view.svg";
 import Header from "./Header";
 
 const Login = () => {
   const { register, handleSubmit } = useForm<User>();
   const [buttonDisabled, setButtonDisabled] = useState(false);
 
+  const [passFieldType, setPassFieldType] = useState<string>("password");
+  const [passFieldIcon, setPassFieldIcon] = useState<string>(HidePassword);
+
   const onSubmit: SubmitHandler<User> = async (user: User) => {
+    alert("Button Test");
     setButtonDisabled(true);
     const response = await loginHandler(user);
     if (!response || response.error) {
@@ -21,11 +26,22 @@ const Login = () => {
     setButtonDisabled(false);
   };
 
+  const handleToggle = () => {
+    const newFieldType = (passFieldType == "password") ? "text" : "password";
+    const newFieldIcon = (passFieldIcon == HidePassword) ? ShowPassword : HidePassword;
+
+    setPassFieldType(newFieldType)
+    setPassFieldIcon(newFieldIcon)
+  }
+
+  // Config later for error popup
+  const onError: SubmitErrorHandler<User> = (errors, e) => console.log(errors, e);
+
   return (
     <>
       <Header></Header>;
       <div className="mt-[60px] w-full h-[500px]">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form id="login-form" onSubmit={handleSubmit(onSubmit, onError)}>
           <div className="w-[480px] h-fit border-[#585858] border rounded-[15px] m-auto mt-[155px] bg-white shadow-section">
             <div className="flex flex-row flex-wrap">
               <h2 className="w-full mt-8 font-thin font-google text-[20px] text-center">
@@ -48,27 +64,27 @@ const Login = () => {
               </div>
 
               <div className="flex w-full items-center h-fit justify-center mt-5 flex-wrap space-y-5">
-                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] flex ">
-                  {/* Fix the background color of the input text not matching the general background color later */}
+                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px]">
                   <input
-                    className="w-[95%] h-full  focus:outline-none focus:border-none ml-2 justify-self"
+                    className="w-full h-full focus:outline-none focus:border-none px-2 justify-self"
                     {...register("email", { required: true, minLength: 4 })}
                     placeholder="Email"
                     type="text"
                   />
                 </div>
-                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] flex ">
-                  {/* Fix the background color of the input text not matching the general background color later */}
+                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] relative">
                   <input
-                    className="w-[95%] h-full  focus:outline-none focus:border-none ml-2 justify-self"
+                    className="w-full h-full focus:outline-none focus:border-none px-2 justify-self"
                     {...register("password", { required: true, minLength: 8 })}
                     placeholder="Password"
-                    type="text"
+                    type={passFieldType}
                   />
-                  <img
-                    src={HidePassword}
-                    className=" max-w-4  ml-2 mr-4"
+                  {/* ml-2 mr-4 */}
+                  <img 
+                    src={passFieldIcon}
+                    className="absolute top-0 bottom-0 my-auto right-4 max-w-4 w-fit h-auto cursor-pointer"  
                     alt=""
+                    onClick={handleToggle}
                   />
                 </div>
               </div>
