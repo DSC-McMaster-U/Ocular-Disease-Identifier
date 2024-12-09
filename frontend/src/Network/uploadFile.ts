@@ -19,7 +19,7 @@ const fetchData = async (input: RequestInfo, init?: RequestInit) => {
 // Handler for uploading image data to the server
 export const handleUpload = async (imageData: FormData) => {
   // Temp url for testing
-  const url: string = "http://127.0.0.1:1000/";
+  const url: string = "http://127.0.0.1:8080/";
 
   try {
     const response = await fetchData(url + "image_posting", {
