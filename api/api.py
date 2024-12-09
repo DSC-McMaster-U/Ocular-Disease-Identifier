@@ -18,7 +18,7 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 
 # load the pre-trained model
 # model_path = '../backend/4_conv.keras'
-model_path = os.path.join(os.getcwd(), 'backend', '4_conv.keras')
+model_path = os.path.join(os.getcwd(), '../backend', '4_conv.keras')
 model = keras.models.load_model(model_path)
 
 # labels that correspond to the prediction
