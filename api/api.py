@@ -5,8 +5,10 @@ from flask_cors import CORS
 from PIL import Image
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
-from preprocess import preprocess_image
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from backend.preprocess import preprocess_image
+from backend.database import register_doctor, login_doctor
+
 
 app = Flask(__name__)
 CORS(app)
@@ -22,6 +24,40 @@ def test_post():
     data = request.get_json()
     input = data['message']
     return jsonify(text=f"{input} - Got this"), 200
+
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    confirm_password = data.get('confirmPassword')
+    print(f"Signup Info - Email: {email}, Password: {password}, Confirm Password: {confirm_password}")
+    if (register_doctor(email,password)):
+        print("register success")
+    else:
+        print("email exists already")
+
+    return jsonify({"message": "Signup data received!"}), 200
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    confirm_password = data.get('confirmPassword')
+    print(f"Signup Info - Email: {email}, Password: {password}, Confirm Password: {confirm_password}")
+    if (login_doctor(email,password)):
+        print("login success")
+    else:
+        print("login unsuccessful due to wrong password or account does not exist")
+
+    return jsonify({"message": "Login successful"}), 200
+
+
+
 
 @app.route('/image_posting',methods=['POST'])
 def image_posting():
