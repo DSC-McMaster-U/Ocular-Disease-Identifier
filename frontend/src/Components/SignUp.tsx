@@ -4,11 +4,15 @@ import { User } from "../Models/user";
 import { signUpHandler } from "../Network/registerLogin";
 import GoogleLogo from "../vendor/img/Global/GoogleLogo.svg";
 import HidePassword from "../vendor/img/SignUp/eye (1).svg";
+import ShowPassword from "../vendor/img/SignUp/view.svg";
 import Header from "./Header";
 
 const SignUp = () => {
   const { register, watch, handleSubmit } = useForm<User>();
   const [buttonDisabled, setButtonDisabled] = useState(false);
+
+  const [passFieldType, setPassFieldType] = useState<string[]>(["password", "password"]);
+  const [passFieldIcon, setPassFieldIcon] = useState<string[]>([HidePassword, HidePassword]);
 
   const onSubmit: SubmitHandler<User> = async (user: User) => {
     setButtonDisabled(true);
@@ -20,6 +24,17 @@ const SignUp = () => {
     }
     setButtonDisabled(false);
   };
+
+  const handleToggle = (index: number) => {
+    const newFieldType = passFieldType[index] == "password" ? "text" : "password";
+    const newFieldIcon = passFieldIcon[index] == HidePassword ? ShowPassword : HidePassword;
+
+    const fieldTypes = passFieldType.slice(0, index).concat([newFieldType]).concat(passFieldType.slice(index + 1));
+    const fieldIcons = passFieldIcon.slice(0, index).concat([newFieldIcon]).concat(passFieldIcon.slice(index + 1));
+
+    setPassFieldType(fieldTypes)
+    setPassFieldIcon(fieldIcons)
+  }
 
   return (
     <>
@@ -51,41 +66,45 @@ const SignUp = () => {
                 <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] flex ">
                   {/* Fix the background color of the input text not matching the general background color later */}
                   <input
-                    className="w-[95%] h-full  focus:outline-none focus:border-none ml-2 justify-self"
+                    className="w-full h-full focus:outline-none focus:border-none px-2 justify-self"
                     {...register("email", { required: true, minLength: 4 })}
                     placeholder="Email"
                     type="text"
                   />
                 </div>
-                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] flex ">
+
+                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] relative">
                   {/* Fix the background color of the input text not matching the general background color later */}
                   <input
-                    className="w-[95%] h-full  focus:outline-none focus:border-none ml-2 justify-self"
+                    className="w-full h-full  focus:outline-none focus:border-none px-2 justify-self"
                     {...register("password", { required: true, minLength: 8 })}
                     placeholder="Password"
-                    type="text"
+                    type={passFieldType[0]}
                   />
                   <img
-                    src={HidePassword}
-                    className=" max-w-4  ml-2 mr-4"
+                    src={passFieldIcon[0]}
+                    className="absolute top-0 bottom-0 my-auto right-4 max-w-4 w-fit h-auto cursor-pointer"  
                     alt=""
+                    onClick={() => {handleToggle(0)}}
                   />
                 </div>
-                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] flex ">
+
+                <div className="border-[#C7C5C5] h-[40px] w-[300px] border-[2px] rounded-[4px] relative">
                   {/* Fix the background color of the input text not matching the general background color later */}
                   <input
-                    className="w-[95%] h-full  focus:outline-none focus:border-none ml-2 justify-self"
+                    className="w-full h-full  focus:outline-none focus:border-none px-2 justify-self"
                     {...register("confirmPassword", {
                       required: true,
                       minLength: 8,
                       validate: (value) => value === watch("password"),
                     })}
                     placeholder="Confirm Password"
-                    type="text"
+                    type={passFieldType[1]}
                   />
                   <img
-                    src={HidePassword}
-                    className=" max-w-4  ml-2 mr-4"
+                    src={passFieldIcon[1]}
+                    className="absolute top-0 bottom-0 my-auto right-4 max-w-4 w-fit h-auto cursor-pointer"  
+                    onClick={() => {handleToggle(1)}}
                     alt=""
                   />
                 </div>
