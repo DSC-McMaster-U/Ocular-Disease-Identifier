@@ -1,63 +1,79 @@
-
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import certifi
-from pymongo import MongoClient
 from datetime import datetime
-#mongo db is basically like a document so we can store different types of data
-#which is good for a healthcare database
 
 uri = "mongodb+srv://iainhmacdonald:iain1234@cluster0.aew76.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
-# connect to the server
 client = MongoClient(uri, tlsCAFile=certifi.where())
-
-
-# confirm connection
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
-
-
 db = client["patients"]
+doctors_collection = db["doctors"]
 patients_collection = db["patients"]
 
-
-# record
-patient_data = {
-    "patient_id": "0001",
-    "name": "John Doe",
-    "dob": datetime(1985, 4, 12),
-    "gender": "Male",
-    "contact_info": {
-        "phone": "555-1234",
-        "email": "john@example.com"
-    },
-    "medical_history": [
-        {"condition": "Cataracts", "diagnosed_on": datetime(2005, 2, 20)}
-    ],
-    "prescriptions": [
-        {"medication": "Advil", "dosage": "500mg", "frequency": "2x daily"}
-    ]
-}
-
-# insert
-try:
-    patient_id = patients_collection.insert_one(patient_data).inserted_id
-    print(f"Inserted patient with ID: {patient_id}")
-except Exception as e:
-    print(f"An error occurred: {e}")
+def register_doctor(doctor_name, password):
+    """Registers a new doctor."""
+    existing_doctor = doctors_collection.find_one({"doctor_name": doctor_name})
+    if existing_doctor:
+        print(f"Doctor {doctor_name} already exists.")
+        return False
+    
+    doctors_collection.insert_one({"doctor_name": doctor_name, "password": password})
+    print(f"Doctor {doctor_name} successfully registered.")
+    return True
 
 
-# get all patients
-all_patients = patients_collection.find()
+def login_doctor(doctor_name, password):
+    """Logs in an existing doctor."""
+    doctor = doctors_collection.find_one({"doctor_name": doctor_name})
+    if not doctor:
+        print(f"Doctor {doctor_name} does not exist.")
+        return False
+    
+    if doctor["password"] == password:
+        print(f"Doctor {doctor_name} successfully logged in.")
+        return True
+    
+    else:
+        print("Invalid password.")
+        return False
 
-for patient in all_patients:
-    print(patient)
-    print("")
+
+def add_patient_entry(doctor_name, patient_name, notes):
+    """Adds a new patient entry under the logged-in doctor."""
+    date = datetime.now().strftime("%Y-%m-%d")
+    time = datetime.now().strftime("%H:%M:%S")
+
+    new_scan_entry = {
+        "date": date,
+        "time": time,
+        "Notes": notes,
+    }
+
+    doctor = patients_collection.find_one({"doctor_name": doctor_name})
+
+    if not doctor:
+        patients_collection.insert_one({
+            "doctor_name": doctor_name,
+            "patients": {
+                patient_name: {date: [new_scan_entry]}
+            }
+        })
+        print(f"Created new doctor {doctor_name} and added first scan for {patient_name}.")
+    else:
+        if patient_name in doctor.get("patients", {}):
+            patients_collection.update_one(
+                {"doctor_name": doctor_name},
+                {"$push": {f"patients.{patient_name}.{date}": new_scan_entry}}
+            )
+            print(f"Added new scan entry for existing patient {patient_name} under {doctor_name}.")
+        else:
+            patients_collection.update_one(
+                {"doctor_name": doctor_name},
+                {"$set": {f"patients.{patient_name}": {date: [new_scan_entry]}}}
+            )
+            print(f"Created new folder for {patient_name} under {doctor_name} and added first scan.")
 
 
-# close connection
-client.close()
+
+register_doctor("Dr Sarah", "abcdefghijk")
+login_doctor("Dr Sarah", "abcdefghijk")
+add_patient_entry("Dr Sarah", "Iain", "Healthy!")
