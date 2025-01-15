@@ -37,7 +37,7 @@ def login_doctor(doctor_name, password):
         return False
 
 
-def add_patient_entry(doctor_name, patient_name, notes):
+def add_patient_entry(doctor_name, patient_name, disease, accuracy, scan):
     """Adds a new patient entry under the logged-in doctor."""
     date = datetime.now().strftime("%Y-%m-%d")
     time = datetime.now().strftime("%H:%M:%S")
@@ -45,7 +45,9 @@ def add_patient_entry(doctor_name, patient_name, notes):
     new_scan_entry = {
         "date": date,
         "time": time,
-        "Notes": notes,
+        "disease": disease,
+        "accuracy": accuracy + "%",
+        "scan": scan
     }
 
     doctor = patients_collection.find_one({"doctor_name": doctor_name})
@@ -74,6 +76,30 @@ def add_patient_entry(doctor_name, patient_name, notes):
 
 
 
+def patient_list(doctor_name):
+    """Retrieves all patients under the specified doctor."""
+    doctor = patients_collection.find_one({"doctor_name": doctor_name})
+
+    if not doctor:
+        print(f"No records found for Dr. {doctor_name}.")
+        return None
+
+    patients = doctor.get("patients", {})
+    for patient, records in patients.items():
+        print(f"Patient: {patient}")
+        for date, scans in records.items():
+            print(f"  Date: {date}")
+            for scan in scans:
+                print(f"    Disease: {scan['disease']}, Accuracy: {scan['accuracy']}, Time: {scan['time']}, Scan: {scan['scan']}")
+    
+    return patients
+
+
+
+
+
+
 register_doctor("Dr Sarah", "abcdefghijk")
 login_doctor("Dr Sarah", "abcdefghijk")
-add_patient_entry("Dr Sarah", "Iain", "Healthy!")
+add_patient_entry("Dr Sarah", "Johann", "cataracts","98.5", "Scan1")
+patient_list("Dr Sarah")
