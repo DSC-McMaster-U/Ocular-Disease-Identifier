@@ -2,6 +2,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import certifi
 from datetime import datetime
+import bcrypt
 
 uri = "mongodb+srv://iainhmacdonald:iain1234@cluster0.aew76.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(uri, tlsCAFile=certifi.where())
@@ -9,26 +10,27 @@ db = client["patients"]
 doctors_collection = db["doctors"]
 patients_collection = db["patients"]
 
-def register_doctor(doctor_name, password):
+def register_doctor(doctor_name : str, password : str) -> bool:
     """Registers a new doctor."""
     existing_doctor = doctors_collection.find_one({"doctor_name": doctor_name})
     if existing_doctor:
         print(f"Doctor {doctor_name} already exists.")
         return False
     
-    doctors_collection.insert_one({"doctor_name": doctor_name, "password": password})
+    hashed_pw = bcrypt.hashpw(password.encode('utf-8', bcrypt.gensalt()))
+    doctors_collection.insert_one({"doctor_name": doctor_name, "password": hashed_pw})
     print(f"Doctor {doctor_name} successfully registered.")
     return True
 
 
-def login_doctor(doctor_name, password):
+def login_doctor(doctor_name : str, password : str) -> bool:
     """Logs in an existing doctor."""
     doctor = doctors_collection.find_one({"doctor_name": doctor_name})
     if not doctor:
         print(f"Doctor {doctor_name} does not exist.")
         return False
     
-    if doctor["password"] == password:
+    if bcrypt.checkpw(password.encode('utf-8'), doctor[password]):
         print(f"Doctor {doctor_name} successfully logged in.")
         return True
     
@@ -99,7 +101,7 @@ def patient_list(doctor_name):
 
 
 
-register_doctor("Dr Sarah", "abcdefghijk")
-login_doctor("Dr Sarah", "abcdefghijk")
-add_patient_entry("Dr Sarah", "Johann", "cataracts","98.5", "Scan1")
-patient_list("Dr Sarah")
+# register_doctor("Dr Sarah", "abcdefghijk")
+# login_doctor("Dr Sarah", "abcdefghijk")
+# add_patient_entry("Dr Sarah", "Johann", "cataracts","98.5", "Scan1")
+# patient_list("Dr Sarah")
