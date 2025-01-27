@@ -2,44 +2,35 @@
 
 <div align="center">
 
-
-*Hello, and welcome to one of the 2024 McMaster GDSC Open Source project repos! Project Lead: [Kristian Diana](https://github.com/kristiandiana).*
-
-
-
-## :loudspeaker: Attention :bangbang:
-
-If **you** are interested in learning about how AI can be used a difference in the healthcare field, then you are in the right place! Whether you are interested in machine learning, web development, or API development, this project has something for you! 
+<p align="center">
+  <img src="./Documentation/images/loading.gif" alt="Loading GIF" width="200"/>
+</p>
 
 ## Project Overview :page_with_curl: 
 
-The **ocular disease identifier** project involves developing an AI model that can predict whether common ocular diseases are present in a fundus image (see *Figure 1*). A user-friendly web application will be developed to provide easy access to the model.
+The **Ocular Disease Identifier** leverages AI to detect ocular diseases from fundus images, offering an accessible and innovative solution for healthcare professionals. With this tool, we aim to enhance early diagnosis and treatment planning, ultimately improving patient outcomes.
 
-<br/>
+Our approach combines:
+**Accuracy**: A high-performing convolutional neural network (CNN) to analyze fundus images.
+**Accessibility**: A user-friendly web application for seamless interaction with the AI model.
+**Real-World Impact**: Designed to be adopted in clinical workflows and aid healthcare professionals.
 
-![Figure 1](./Documentation/images/Figure1.png)
-<p align="center"><em>Figure 1: High Level Visualization of Project.</em></p>
+</div>
+| Contributor                                                                                                     | Most Used Frameworks/Tools                                                                                                                                                                                                                                    | Notable Contributions                                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="Documentation/images/Team/Kristian.png" alt="Kristian Diana" width="100"/> <br/> [**Kristian Diana**](https://github.com/kristiandiana) <br/> <i>Project Lead</i> | ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white) ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white) ![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white) | <ul><li>[#1: Initial Setup](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#2: Cloud Architecture Design](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
+| <img src="Documentation/images/Team/Alex.jpg" alt="Alex Chen" width="100"/> <br/> [**Alex Chen**](https://github.com/alexchen2) <br/> <i>ML/AI Engineer</i> | ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white) ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white) ![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white) | <ul><li>[#3: Model Training](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#4: Data Preprocessing Pipelines](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
+| <img src="Documentation/images/Team/Iain.png" alt="Iain MacDonald" width="100"/> <br/> [**Iain MacDonald**](https://github.com/IainMac32) <br/> <i>Full-stack Developer</i> | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) | <ul><li>[#5: Frontend Components](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#6: API Integrations](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
+| <img src="Documentation/images/Team/JasimrazaMomin.jpg" alt="Jasimraza Momin" width="100"/> <br/> [**Jasimraza Momin**](https://github.com/JasimrazaMomin) <br/> <i>Cloud/DevOps Engineer</i> | ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white) | <ul><li>[#7: CI/CD Pipelines](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#8: Cloud Deployment](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
+| <img src="Documentation/images/Team/George.PNG" alt="George Ghiugan" width="100"/> <br/> [**George Ghiugan**](https://github.com/ghiugan) <br/> <i>Full-stack Developer</i> | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) | <ul><li>[#9: User Authentication](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#10: Bug Fixes](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
+| <img src="Documentation/images/Team/Maheer.JPG" alt="Maheer Huq" width="100"/> <br/> [**Maheer Huq**](https://github.com/Maheer96) <br/> <i>Full-stack Developer</i> | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) | <ul><li>[#11: Responsive Design](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#12: Performance Optimization](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
+| <img src="Documentation/images/Team/Nick.jpg" alt="Nick Zajskeskovic" width="100"/> <br/> [**Nick Zajskeskovic**](https://github.com/nzajk) <br/> <i>Cloud/DevOps Engineer</i> | ![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)![Kubernetes](https://img.shields.io/badge/kubernetes-%23326ce5.svg?style=for-the-badge&logo=kubernetes&logoColor=white) | <ul><li>[#9: Placeholder](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#10: Placeholder](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
 
+| <img src="Documentation/images/Team/Sam.jpg" alt="Samuel Shi" width="100"/> <br/> [**Samuel Shi**](https://github.com/sokosam) <br/> <i>Full-stack Developer</i> | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) | <ul><li>[#11: Placeholder](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#12: Placeholder](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
 
-<br/>
+| <img src="Documentation/images/Team/Vikram.jpg" alt="Vikram Chandar" width="100"/> <br/> [**Vikram Chandar**](https://github.com/vikramC04) <br/> <i>ML/AI Engineer</i> | ![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=TensorFlow&logoColor=white)![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white) | <ul><li>[#13: Placeholder](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li><li>[#14: Placeholder](https://github.com/DSC-McMaster-U/DBAC-Companion-App/)</li></ul> |
 
-The team will comprise of two sub-teams; the Frontend sub-team, and the Backend sub-team. As a brief summary, the main focus of each sub-team is as follows. The Frontend sub-team is responsible for the development of the web application, as well as an API using a Python framework. The Backend sub-team is responsible for the development of a convolutional neural network (CNN) using TensorFlow. The model is to be trained using a publicly sourced dataset. For more information about the project, please see the attached [Project Roadmap](./PROJECT-ROADMAP.md) which includes a detailed [Sprint Plan](./PROJECT-ROADMAP.md#sprint-planning) and proposed [Tech Stack](./PROJECT-ROADMAP.md#tech-stack) for the project.
-
-
-
-
-## Available Developer Positions :busts_in_silhouette:
-
-There will be ***3 available positions for each of the two sub-teams*** indicated above (6 total). As a side note, being assigned to a specific sub-team does **not** necessarily mean you will not learn about the other, however it **is** where the bulk of your contributions will be made. 
-
-This position will provide you with relevant experience that will help you stand out to recruiters. I am looking for individuals who will put in consistent effort and who are eager to learn! Apply to this team to have your work displayed in the contributions table below!
-
-
-| <div style="width:100px"> Contributor </div>                                                                   | Most Used Frameworks/Tools | Notable Contributions |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------- | --------------------- |
-| <img src="Documentation/images/portrait-low-mb.png" alt="Kristian Diana" width="100"/> <br/> **Kristian Diana** <br/> <i/> Project Lead </i> |                            |                       |
-| **Your Name!** |                |           |
-
+<div align="center">
 
 ## For More Information.....
 ### [View the Project Roadmap](./PROJECT-ROADMAP.md)
