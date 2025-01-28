@@ -17,6 +17,8 @@ The **Ocular Disease Identifier** leverages AI to detect ocular diseases from fu
 - **Accessibility**: Offers a user-friendly web application for seamless interaction with the AI model.
 - **Real-World Impact**: Designed to integrate with clinical workflows, supporting healthcare professionals in making informed decisions.
 
+![App Demo](./Documentation/images/mvp_demo.gif)
+
 ---
 
 ## Contributors :handshake:
