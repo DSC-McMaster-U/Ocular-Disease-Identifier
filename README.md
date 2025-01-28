@@ -37,6 +37,9 @@ The **Ocular Disease Identifier** leverages AI to detect ocular diseases from fu
 
 ---
 
+## Architecture Diagram
+![Architecture Diagram](./Documentation/images/odi_architecture_diagram.png)
+
 ## For More Information.....
 ### [View the Project Roadmap](./PROJECT-ROADMAP.md)
 
