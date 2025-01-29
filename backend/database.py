@@ -99,7 +99,7 @@ def patient_list(doctor_name):
 
 
 
-register_doctor("Dr Sarah", "abcdefghijk")
-login_doctor("Dr Sarah", "abcdefghijk")
-add_patient_entry("Dr Sarah", "Johann", "cataracts","98.5", "Scan1")
-patient_list("Dr Sarah")
+# register_doctor("Dr Sarah", "abcdefghijk")
+# login_doctor("Dr Sarah", "abcdefghijk")
+# add_patient_entry("Dr Sarah", "Johann", "cataracts","98.5", "Scan1")
+# patient_list("Dr Sarah")
