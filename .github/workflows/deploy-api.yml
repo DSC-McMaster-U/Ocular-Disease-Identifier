@@ -1,4 +1,4 @@
-name: "Push Docker image to Artifact Registry"
+name: "Push API Docker image to Artifact Registry"
 
 on:
   workflow_dispatch:
@@ -28,6 +28,12 @@ jobs:
         run: |
           echo "${{ secrets.SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json" >> $GITHUB_ENV
+
+      - name: Create .env file
+        run: |
+          echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" > .env
+          echo "MODEL_NAME=${{ secrets.MODEL_NAME }}" >> .env
+          echo "LOCAL_DESTINATION=${{ secrets.LOCAL_DESTINATION }}" >> .env
 
       - name: Build and Push Docker image
         run: |
