@@ -5,7 +5,8 @@ from flask_cors import CORS
 from PIL import Image
 import sys
 import os
-
+from google.cloud import storage
+from dotenv import load_dotenv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.preprocess import preprocess_image
 from backend.database import register_doctor, login_doctor
@@ -19,16 +20,47 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+load_dotenv()
+
+BUCKET_NAME = os.getenv("BUCKET_NAME")
+MODEL_NAME = os.getenv("MODEL_NAME")
+LOCAL_DESTINATION = os.getenv("LOCAL_DESTINATION")
 
 # load the pre-trained model
 # model_path = '../backend/4_conv.keras'
-model_path = os.path.join(os.getcwd(), '../backend', '4_conv.keras')
-model = keras.models.load_model(model_path)
+# model_path = os.path.join(os.getcwd(), '../backend', '4_conv.keras')
 
 # labels that correspond to the prediction
 labels = ['cataract', 'mild nonproliferative retinopathy', 'moderate non proliferative retinopathy',
           'normal fundus', 'pathological myopia']
+
+SA_KEY_PATH = "/tmp/gcp-key.json"
+if not os.path.exists(SA_KEY_PATH): 
+    sa_key_json = os.getenv("SERVICE_ACCOUNT_KEY")
+    
+    if not sa_key_json:
+        raise ValueError("Missing Google Cloud credentials in environment variables!")
+
+    with open(SA_KEY_PATH, "w") as f:
+        f.write(sa_key_json)
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = SA_KEY_PATH
+
+credentials_dict = json.loads(sa_key_json)
+storage_client = storage.Client.from_service_account_info(credentials_dict)
+
+def download_model(bucket_name, model_name, destination,storage_client):
+    client = storage_client
+    bucket = client.get_bucket(bucket_name)
+    blob = bucket.blob(model_name)
+    blob.download_to_filename(destination)
+    print(f"model {model_name} downloaded to {destination}")
+    
+download_model(BUCKET_NAME, MODEL_NAME, LOCAL_DESTINATION,storage_client) 
+    
+model = keras.models.load_model(LOCAL_DESTINATION)
 
 def predict(image_path):
     img = cv2.imread(image_path)
