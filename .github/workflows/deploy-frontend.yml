@@ -1,0 +1,42 @@
+name: "Push frontend docker image to GCP artifact registry"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.PROJECT_ID }}
+
+      - name: Authenticate Docker with GCP
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Inject Google Cloud credentials into environment
+        run: |
+          echo "${{ secrets.SERVICE_ACCOUNT_KEY }}" > /tmp/gcp-key.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json" >> $GITHUB_ENV
+      - name: Create .env file
+        run: |
+          echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" > .env
+          echo "MODEL_NAME=${{ secrets.MODEL_NAME }}" >> .env
+          echo "LOCAL_DESTINATION=${{ secrets.LOCAL_DESTINATION }}" >> .env
+      - name: Build and Push Docker image
+        run: |
+          IMAGE_NAME=us-central1-docker.pkg.dev/${{ secrets.PROJECT_ID }}/docker-repo/frontend
+          docker build -t $IMAGE_NAME:latest ./frontend # build dockerfile from the frontend directory
+          docker tag $IMAGE_NAME:latest $IMAGE_NAME:$GITHUB_SHA
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:$GITHUB_SHA
