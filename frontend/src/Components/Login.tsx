@@ -6,25 +6,39 @@ import GoogleLogo from "../vendor/img/Global/GoogleLogo.svg";
 import HidePassword from "../vendor/img/SignUp/eye (1).svg";
 import ShowPassword from "../vendor/img/SignUp/view.svg";
 import Header from "./Header";
+import { useNavigate } from 'react-router-dom'; 
 
 const Login = () => {
   const { register, handleSubmit } = useForm<User>();
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const navigate = useNavigate(); 
 
   const [passFieldType, setPassFieldType] = useState<string>("password");
   const [passFieldIcon, setPassFieldIcon] = useState<string>(HidePassword);
+  const [loginError, setLoginError] = useState<string>("");
+
+
 
   const onSubmit: SubmitHandler<User> = async (user: User) => {
-    alert("Button Test");
     setButtonDisabled(true);
-    const response = await loginHandler(user);
-    if (!response || response.error) {
-      console.error("Error:", response.error);
-    } else {
-      console.log("Response:", response);
+    try {
+        const response = await loginHandler(user);
+        if (response.error) {
+            // If we got an error, show it
+            setLoginError("Invalid email or password");
+        } else {
+            // No error means successful login
+            navigate('/user/dashboard');
+        }
+    } catch (error) {
+        // Handle any network or other errors
+        setLoginError("Login failed. Please try again.");
+    } finally {
+        setButtonDisabled(false);
     }
-    setButtonDisabled(false);
-  };
+};
+
+
 
   const handleToggle = () => {
     const newFieldType = (passFieldType == "password") ? "text" : "password";
@@ -35,8 +49,15 @@ const Login = () => {
   }
 
   // Config later for error popup
-  const onError: SubmitErrorHandler<User> = (errors, e) => console.log(errors, e);
-
+  const onError: SubmitErrorHandler<User> = (errors, e) => {
+    if (errors.email) {
+      setLoginError("Please enter a valid email address");
+    } else if (errors.password) {
+      setLoginError("Password must be at least 8 characters long");
+    }
+  };
+  
+  
   return (
     <>
       <Header></Header>;
@@ -88,6 +109,11 @@ const Login = () => {
                   />
                 </div>
               </div>
+              {loginError && (
+                <div className="w-[300px] text-red-500 text-sm mt-1 text-center mx-auto">
+                  {loginError}
+                </div>
+              )}
 
               <div className="w-full m-10 h-12 flex justify-center align-center ">
                 <input

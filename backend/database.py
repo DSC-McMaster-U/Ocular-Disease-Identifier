@@ -24,7 +24,7 @@ def register_doctor(doctor_name : str, password : str) -> bool:
         print(f"Doctor {doctor_name} already exists.")
         return False
     
-    hashed_pw = bcrypt.hashpw(password.encode('utf-8', bcrypt.gensalt()))
+    hashed_pw = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     doctors_collection.insert_one({"doctor_name": doctor_name, "password": hashed_pw})
     print(f"Doctor {doctor_name} successfully registered.")
     return True
@@ -37,7 +37,7 @@ def login_doctor(doctor_name : str, password : str) -> bool:
         print(f"Doctor {doctor_name} does not exist.")
         return False
     
-    if bcrypt.checkpw(password.encode('utf-8'), doctor[password]):
+    if bcrypt.checkpw(password.encode('utf-8'), doctor['password']):
         print(f"Doctor {doctor_name} successfully logged in.")
         return True
     
@@ -198,7 +198,12 @@ def patient_list(doctor_name):
 
 
 
-register_doctor("Dr Iain", "123456789")
-login_doctor("Dr Iain", "123456789")
-add_patient_entry("Dr Iain", "Aiden", "cataracts","98.5", "testimage2.jpg")
-print(patient_list("Dr Iain"))
+# register_doctor("Dr John", "123456789")
+# login_doctor("Dr John", "123456789")
+# add_patient_entry("hello12345", "Anthony", "cataracts","98.5", "testimage.jpg")
+# print(patient_list("Dr John"))
+
+# add_patient_entry("iainm@gmail.com", "Kristian diana", "cataracts","98.5", "testimage.jpg")
+# add_patient_entry("iainm@gmail.com", "Ethan diana", "Normal","91.5", "testimage.jpg")
+
+add_patient_entry("iainm@gmail.com", "Félix Lengyel", "Glaucoma","100.0", "testimage.jpg")

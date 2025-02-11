@@ -7,13 +7,69 @@ import currentPatients from "../../vendor/img/UserDashboard/current_patients_ico
 import rightArrow from "../../vendor/img/UserDashboard/right_arrow.svg";
 import leftArrow from "../../vendor/img/UserDashboard/left_arrow.svg";
 import { Profile } from "../../Models/user";
-import { useState } from "react";
 import { Patient } from "../../Models/patient";
 import Card from "./Card";
 import Table from "./Table";
 import SubMenuTab from "./SubMenuTab";
+import { useState, useEffect, ProfilerOnRenderCallback } from 'react';
+import { getProfiles } from "../utils/auth";
 
 const UserDashboard = () => {
+
+  interface Profiled {
+    accuracy: string;
+    disease: string;
+    date: string;
+    name: string;
+    // Add other properties as needed
+  }
+
+
+  const [profileData, setProfileData] = useState<Profiled[] | null>(null);  // Add this state
+
+
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    console.log("here");
+    console.log(userStr);
+
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      console.log("user");
+      console.log(user);
+
+      const displayName = user.email.split('@')[0]; // Extract username from email
+      console.log("name");
+      console.log(displayName);
+
+      // Call the /get_profiles endpoint
+      fetch('http://localhost:8080/get_profiles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: user.email }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Profiles received:", data);
+          setProfileData(data); // Assuming the response is an array of profiles
+        })
+        .catch(error => {
+          console.error("Error fetching profiles:", error);
+        });
+    }
+  }, []);
+
+  console.log("here!!")
+  if (profileData != null){
+    console.log(profileData[0]["accuracy"])
+  }
+
+
+
+
   // Submenu tab constants + useStates
   const numGeneralTabs = 4;
   const numPersonalTabs = 1;
@@ -24,39 +80,38 @@ const UserDashboard = () => {
 
   const [profile, setProfile] = useState<Profile | null>(null);
 
+
+
   // Temporary placeholder data for recent scans
-  const scans: Patient[] = [
-    {
-      person: "Adam Peterson",
-      condition: "Pathological Myopia",
-      date: "11/19/2024",
-      confidence: 0.93,
-    },
-    {
-      person: "Jane Doe",
-      condition: "Glaucoma",
-      date: "11/15/2024",
-      confidence: 0.89,
-    },
-    {
-      person: "John Smith",
-      condition: "Cataract",
-      date: "11/10/2024",
-      confidence: 0.95,
-    },
-    {
-      person: "Emily Davis",
-      condition: "Diabetic Retinopathy",
-      date: "11/05/2024",
-      confidence: 0.91,
-    },
-    {
-      person: "Michael Brown",
-      condition: "Macular Degeneration",
-      date: "11/01/2024",
-      confidence: 0.92,
-    },
-  ];
+  let scans: Patient[]; // Declare scans outside the if-else blocks
+
+  if (profileData != null) {
+    scans = []
+    for (const pat of profileData) {
+      scans.push({person: pat["name"],condition: pat["disease"],date: pat["date"],confidence: Number((pat["accuracy"]).slice(0, -1))})
+    }
+  } else {
+    scans = [
+      {
+        person: "null",
+        condition: "null",
+        date: "null",
+        confidence: 0.00,
+      },
+      {
+        person: "null",
+        condition: "null",
+        date: "null",
+        confidence: 0.00,
+      },
+      {
+        person: "null",
+        condition: "null",
+        date: "null",
+        confidence: 0.00,
+      },
+    ];
+  }
 
   // State to track the currently displayed card
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -106,12 +161,23 @@ const UserDashboard = () => {
 
   // Main dashboard body component (you can probably move this into a separate component file)
   const MainDashboard = () => {
+    const [username, setUsername] = useState<string>(""); // Add this state
+
+    useEffect(() => {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            const user = JSON.parse(userStr);
+            // Assuming email is something like "doctor@email.com", this will show just "doctor"
+            const displayName = user.email.split('@')[0];
+            setUsername(displayName);
+        }
+    }, []);
     return (
       <>
         {/* Header text */}
         <div className="mt-[71px]">
           <h1 className="text-[45px] font-bold text-[#2c2c2c] font-google tracking-wide">
-            Welcome, Dr. Sam!
+            Welcome, Dr. {username}!
           </h1>
           <p className="text-2xl font-body mt-[12px] text-[#666666]">
             Look over your most{" "}
@@ -240,6 +306,7 @@ const UserDashboard = () => {
 
   // Function to select and display dashboard body, based on subtab selected
   const getDashboardBody = () => {
+
     for (const [index, tabStatus] of subMenuTab.entries()) {
       console.log(`Index ${index}: ${tabStatus}`);
       if (tabStatus) {
@@ -254,6 +321,20 @@ const UserDashboard = () => {
     );
     return dashboardBodies[0];
   };
+  const [username, setUsername] = useState<string>(""); // Add this state
+  const [email, setEmail] = useState<string>(""); // Add this state
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+        const user = JSON.parse(userStr);
+        setEmail(user.email)
+        // Assuming email is something like "doctor@email.com", this will show just "doctor"
+        const displayName = user.email.split('@')[0];
+        setUsername(displayName);
+    }
+  }, []);
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -281,14 +362,14 @@ const UserDashboard = () => {
                   ? profile.username
                     ? profile.username
                     : profile.user.email
-                  : "Unknown user"}
+                  : username}
               </h2>
               <p className="mt-[5px] text-center text-[#898989] text-sm font-light font-body break-all">
                 {profile
                   ? profile.username
                     ? profile.user.email
                     : ""
-                  : "Unknown email"}
+                  : email}
               </p>
             </div>
 

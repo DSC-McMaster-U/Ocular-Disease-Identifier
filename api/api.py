@@ -9,7 +9,7 @@ from google.cloud import storage
 from dotenv import load_dotenv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.preprocess import preprocess_image
-from backend.database import register_doctor, login_doctor
+from backend.database import register_doctor, login_doctor, patient_list
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
 import numpy as np
 import cv2
@@ -36,20 +36,20 @@ LOCAL_DESTINATION = os.getenv("LOCAL_DESTINATION")
 labels = ['cataract', 'mild nonproliferative retinopathy', 'moderate non proliferative retinopathy',
           'normal fundus', 'pathological myopia']
 
-SA_KEY_PATH = "/tmp/gcp-key.json"
-if not os.path.exists(SA_KEY_PATH): 
-    sa_key_json = os.getenv("SERVICE_ACCOUNT_KEY")
+# SA_KEY_PATH = "/tmp/gcp-key.json"
+# if not os.path.exists(SA_KEY_PATH): 
+#     sa_key_json = os.getenv("SERVICE_ACCOUNT_KEY")
     
-    if not sa_key_json:
-        raise ValueError("Missing Google Cloud credentials in environment variables!")
+#     if not sa_key_json:
+#         raise ValueError("Missing Google Cloud credentials in environment variables!")
 
-    with open(SA_KEY_PATH, "w") as f:
-        f.write(sa_key_json)
+#     with open(SA_KEY_PATH, "w") as f:
+#         f.write(sa_key_json)
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = SA_KEY_PATH
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = SA_KEY_PATH
 
-credentials_dict = json.loads(sa_key_json)
-storage_client = storage.Client.from_service_account_info(credentials_dict)
+# credentials_dict = json.loads(sa_key_json)
+# storage_client = storage.Client.from_service_account_info(credentials_dict)
 
 def download_model(bucket_name, model_name, destination,storage_client):
     client = storage_client
@@ -58,9 +58,9 @@ def download_model(bucket_name, model_name, destination,storage_client):
     blob.download_to_filename(destination)
     print(f"model {model_name} downloaded to {destination}")
     
-download_model(BUCKET_NAME, MODEL_NAME, LOCAL_DESTINATION,storage_client) 
+# download_model(BUCKET_NAME, MODEL_NAME, LOCAL_DESTINATION,storage_client) 
     
-model = keras.models.load_model(LOCAL_DESTINATION)
+# model = keras.models.load_model(LOCAL_DESTINATION)
 
 def predict(image_path):
     img = cv2.imread(image_path)
@@ -98,13 +98,14 @@ def signup():
     email = data.get('email')
     password = data.get('password')
     confirm_password = data.get('confirmPassword')
-    print(f"Signup Info - Email: {email}, Password: {password}, Confirm Password: {confirm_password}")
-    if (register_doctor(email,password)):
-        print("register success")
+    
+    if password != confirm_password:
+        return jsonify({"error": "Passwords do not match"}), 400
+        
+    if register_doctor(email, password):
+        return jsonify({"message": "Signup successful"}), 201
     else:
-        print("email exists already")
-
-    return jsonify({"message": "Signup data received!"}), 200
+        return jsonify({"error": "Email already exists"}), 409
 
 
 @app.route('/login', methods=['POST'])
@@ -112,14 +113,19 @@ def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
-    confirm_password = data.get('confirmPassword')
-    print(f"Signup Info - Email: {email}, Password: {password}, Confirm Password: {confirm_password}")
-    if (login_doctor(email,password)):
-        print("login success")
+    
+    if login_doctor(email, password):
+        return jsonify({"message": "Login successful"}), 200
     else:
-        print("login unsuccessful due to wrong password or account does not exist")
+        return jsonify({"error": "Invalid email or password"}), 401
 
-    return jsonify({"message": "Login successful"}), 200
+@app.route('/get_profiles', methods=['POST'])
+def get_profiles():
+    print("tried to get profiles")
+    data = request.get_json()
+    email = data.get('username')
+
+    return jsonify(patient_list(email)), 200
 
 
 
