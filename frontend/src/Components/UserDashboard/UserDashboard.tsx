@@ -71,6 +71,8 @@ const UserDashboard = () => {
 
 
   // Submenu tab constants + useStates
+  let recentScansCount = 0;
+
   const numGeneralTabs = 4;
   const numPersonalTabs = 1;
   const [subMenuTab, setSubMenuTab] = useState<boolean[]>([
@@ -85,11 +87,24 @@ const UserDashboard = () => {
   // Temporary placeholder data for recent scans
   let scans: Patient[]; // Declare scans outside the if-else blocks
 
-  if (profileData != null) {
-    scans = []
-    for (const pat of profileData) {
-      scans.push({person: pat["name"],condition: pat["disease"],date: pat["date"],confidence: Number((pat["accuracy"]).slice(0, -1))})
-    }
+    if (profileData != null) {
+      scans = [];
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      for (const pat of profileData) {
+          const scanDate = new Date(pat["date"]);
+          scans.push({
+              person: pat["name"],
+              condition: pat["disease"],
+              date: pat["date"],
+              confidence: Number((pat["accuracy"]).slice(0, -1))
+          });
+
+          if (scanDate >= oneWeekAgo) {
+              recentScansCount++;
+          }
+      }
   } else {
     scans = [
       {
@@ -278,7 +293,7 @@ const UserDashboard = () => {
             <h2 className="self-start text-[#2d2d2d] text-[23px] font-normal font-google">
               This Week's Total Uploads
             </h2>
-            <p className="text-[92px] font-bold font-google">14</p>
+            <p className="text-[92px] font-bold font-google">{recentScansCount}</p>
             <p className="text-[#666666] text-[16px] font-light font-body mb-[21px] mt-[10px]">
               Some sort of short body text here, or maybe an external
               link/button to the upload image page?
