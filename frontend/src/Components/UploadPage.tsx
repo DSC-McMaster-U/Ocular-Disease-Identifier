@@ -1,5 +1,5 @@
 import Header from "./Header";
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useRef } from "react";
 
 import ImagePopup from "./ImagePopup";
 import UploadArrow from "../vendor/img/UploadPage/upload-arrow.png";
@@ -18,38 +18,34 @@ interface Props {
   children?: ReactNode;
 }
 
+interface ImageWithPatient {
+  file: File;
+  patientName: string;
+}
+
 interface PreviewProps extends Props {
   file: File;
   fileIndex: number;
+  patientName: string;
+  onPatientNameChange: (index: number, name: string) => void;
 }
 
 interface ResultsEntryProps extends Props {
   file?: File;
   name: string;
   label: string;
-  confidenceVal?: number; // Temporary for now, and doesn't appear in table (at least for the MVP demo)
+  confidenceVal?: number;
 }
 
 const UploadPage = () => {
   ///* Constants and useState() Variables *///
-  // Array storing uploaded images
-  const [images, setImages] = useState<File[]>([]);
-
-  // Array for image results data
+  const [images, setImages] = useState<ImageWithPatient[]>([]);
   const [results, setResults] = useState<
     { name: string; label: string; confidenceVal?: number }[]
   >([]);
-
-  // For drag and drop - WIP
   const [dragActive, setDragActive] = useState<boolean>(false);
-
-  // Detects when site is currently uploading images, and prevents any more POST requests from being made
   const [uploadActive, setUploadActive] = useState<boolean>(false);
-
-  // Keeps track of when page is displaying the results popup
   const [resultsActive, setResultsActive] = useState<boolean>(false);
-
-  // For when page is not in the midst of uploading or displaying results
   const [pageReady, setPageReady] = useState<boolean>(true);
 
   ///* Auxiliary Handler Functions *///
@@ -57,7 +53,6 @@ const UploadPage = () => {
     let fileName, fileNameTemp;
     const maxNameSize = 25;
 
-    // Trimming of file name in order to prevent overflow or text wrapping
     if (origName.length > maxNameSize) {
       fileNameTemp = [
         origName.split(".").slice(0, -1).join("."),
@@ -81,32 +76,45 @@ const UploadPage = () => {
     setImages(tempImages);
   };
 
-  // Upload form auxiliary functions
+  const handlePatientNameChange = (index: number, name: string) => {
+    const updatedImages = [...images];
+    updatedImages[index].patientName = name;
+    setImages(updatedImages);
+  };
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
 
-    // If manual upload images exist, then append new files to current images array; if not, keep same images
-    setImages(
-      event.target.files && event.target.files[0]
-        ? [...images, ...event.target.files]
-        : [...images]
-    );
+    if (event.target.files && event.target.files[0]) {
+      const newImages = Array.from(event.target.files).map(file => ({
+        file,
+        patientName: ''
+      }));
+      setImages([...images, ...newImages]);
+    }
   };
 
-  // Image uploading functions
   const handleSubmit = () => {
     const formData = new FormData();
 
     if (!images.length) {
-      // Temporary error-handling/debug for now
-      alert(
-        "No image files detected. Please upload some images first and try again."
-      );
+      alert("No image files detected. Please upload some images first and try again.");
       return;
     }
 
+    const userStri = localStorage.getItem('user') || "default_value";
+    const user = JSON.parse(userStri);
+    const userEmail = user.email
+    console.log("useremail ",userEmail);
+
+
     images.forEach((image) => {
-      formData.append("images", image);
+      formData.append("images", image.file);
+      formData.append("patientNames", image.patientName);
+      formData.append("doctorEmail",userEmail)
+
+      console.log(image)
+
     });
 
     setPageReady(false);
@@ -114,7 +122,6 @@ const UploadPage = () => {
     uploadImage(formData);
   };
 
-  // Uploads image data to server
   const uploadImage = async (imageData: FormData) => {
     const response = await handleUpload(imageData);
     if (!response || response.error) {
@@ -123,17 +130,13 @@ const UploadPage = () => {
       setPageReady(true);
       return;
     } else {
-      // Add data here; each array entry should be in the exact form as ResultsEntryProp, excluding the imageIndex entry
       setResults([...response.message]);
-
-      // alert("Successfully uploaded image(s)!");
       setUploadActive(false);
       setResultsActive(true);
     }
   };
 
-  ///* Subcomponents of Upload Page *///
-  // Dynamic results table entry
+  ///* Subcomponents *///
   const ResultsEntry = ({ file, name, label }: ResultsEntryProps) => {
     const fileName = shortenFileName(name);
 
@@ -146,12 +149,10 @@ const UploadPage = () => {
         </td>
         <td>{fileName}</td>
         <td>{`${label[0].toUpperCase()}${label.slice(1)}`}</td>
-        {/* <td> {confidenceVal} </td>   <-- for confidence value */}
       </tr>
     );
   };
 
-  // Loading & results modals - specific to upload page, and appears when images are being processed
   const ResultsModal = () => {
     return (
       <div
@@ -208,13 +209,11 @@ const UploadPage = () => {
             </span>
           </div>
 
-          {/* Add results in here, somehow */}
           <div className="w-auto h-fit relative mx-[100px]">
             <span className="text-[#4c4c4c] text-[22px] font-google tracking-[0.02em]">
               Results
             </span>
 
-            {/* Results table */}
             <div
               className={`${
                 results && results.length > 3 ? "overflow-y-scroll" : ""
@@ -228,14 +227,13 @@ const UploadPage = () => {
                     <th className="font-normal">Preview</th>
                     <th className="font-normal text-left">File Name</th>
                     <th className="font-normal text-left">Classification</th>
-                    {/* <th>Confidence Value</th>  <-- not implemented for now */}
                   </tr>
                 </thead>
                 <tbody className="max-h-[calc(50px*4)] h-auto font-body text-[#1f1f1f] text-[14px]">
                   {results.map((imgResult, index) => {
                     const file =
-                      images[index].name == imgResult.name
-                        ? images[index]
+                      images[index]?.file.name == imgResult.name
+                        ? images[index]?.file
                         : undefined;
                     return (
                       <ResultsEntry
@@ -257,17 +255,10 @@ const UploadPage = () => {
               hover:bg-[#2471ec] active:bg-[#154fad] rounded-[25px] flex justify-center align-middle
               transition-all ease-in-out focus-visible:outline-none"
             onClick={async () => {
-              // Set flags for results popup visibility and page waiting for input (to false and true, respectively)
               setResultsActive(false);
-
-              // Set delay to allow fade out animation to play for results popup
               await new Promise((resolve) => setTimeout(resolve, 500));
               setResults([]);
               setPageReady(true);
-
-              console.log(
-                `pageReady = ${pageReady}, resultsActive = ${resultsActive}, uploadActive = ${uploadActive}`
-              );
             }}
           >
             <span className="text-center text-white text-md font-bold font-google my-auto">
@@ -279,7 +270,6 @@ const UploadPage = () => {
     );
   };
 
-  // Upload drag-and-drop area component
   const UploadBox = () => {
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -294,20 +284,33 @@ const UploadPage = () => {
             w-full min-h-[346px] h-full text-center
             flex flex-col items-center justify-center`}
           onDragEnter={(event) => {
-            handleDragActive(event, { setDragActive, setImages, images });
+            if (event.dataTransfer.items && event.dataTransfer.items.length > 0) {
+              setDragActive(true);
+            }
           }}
           onSubmit={(event) => event.preventDefault()}
           onDrop={(event) => {
-            handleDrop(event, { setDragActive, setImages, images });
+            event.preventDefault();
+            setDragActive(false);
+            if (event.dataTransfer.files && event.dataTransfer.files[0]) {
+              const newImages = Array.from(event.dataTransfer.files).map(file => ({
+                file,
+                patientName: ''
+              }));
+              setImages([...images, ...newImages]);
+            }
           }}
           onDragLeave={(event) => {
-            handleDragLeave(event, { setDragActive, setImages, images });
+            event.preventDefault();
+            setDragActive(false);
           }}
           onDragOver={(event) => {
-            handleDragActive(event, { setDragActive, setImages, images });
+            event.preventDefault();
+            if (event.dataTransfer.items && event.dataTransfer.items.length > 0) {
+              setDragActive(true);
+            }
           }}
         >
-          {/* Input for drag and drop; currently not implemented, WIP */}
           <input
             type="file"
             name="images"
@@ -315,9 +318,6 @@ const UploadPage = () => {
             multiple
             hidden
             accept="image/png, image/jpeg, image/bmp"
-            // ref={inputRef}
-
-            // Move the following below to separate handleUpload/Change function, so this can also be used for drag-drop
             onChange={handleChange}
           />
 
@@ -345,11 +345,6 @@ const UploadPage = () => {
                 rounded-[25px] flex justify-center align-middle cursor-pointer
                 transition-all ease-in-out
               "
-              onClick={() =>
-                console.log(
-                  `pageReady = ${pageReady}, resultsActive = ${resultsActive}, uploadActive = ${uploadActive}`
-                )
-              }
             >
               <span className="text-center text-white text-sm font-bold font-google my-auto cursor-pointer">
                 Browse files...
@@ -361,21 +356,34 @@ const UploadPage = () => {
     );
   };
 
-  // Image preview file components
-  const PreviewCapsule = ({ file, fileIndex }: PreviewProps) => {
+  const PreviewCapsule = ({ file, fileIndex, patientName, onPatientNameChange }: PreviewProps) => {
     const fileName = shortenFileName(file.name);
-
+    const [localName, setLocalName] = useState(patientName);
+    const inputRef = useRef<HTMLInputElement>(null);
+  
+    // Update parent only when input loses focus
+    const handleBlur = () => {
+      if (localName !== patientName) {
+        onPatientNameChange(fileIndex, localName);
+      }
+    };
+  
     return (
-      <div
-        className="
-          md:max-w-[413px] min-h-[79px] w-full h-fit px-[24px]
-          flex flex-col justify-center
-          bg-white rounded-xl border border-[#d2d2d2]
-        "
-      >
+      <div className="md:max-w-[413px] min-h-[79px] w-full h-fit px-[24px] flex flex-col justify-center bg-white rounded-xl border border-[#d2d2d2]">
         <div className="h-fit w-full flex gap-[18.5px] justify-evenly">
           <ImagePopup imageSrc={URL.createObjectURL(file)}></ImagePopup>
-          <div className="w-full h-fit">{fileName}</div>
+          <div className="w-full h-fit flex flex-col">
+            <div>{fileName}</div>
+            <input
+              ref={inputRef}
+              type="text"
+              value={localName}
+              onChange={(e) => setLocalName(e.target.value)}
+              onBlur={handleBlur}
+                placeholder="Patient name"
+              className="mt-2 p-1 border border-gray-300 rounded text-sm"
+            />
+          </div>
           <img
             src={DeleteIcon}
             alt=""
@@ -443,9 +451,11 @@ const UploadPage = () => {
               {images && images.length ? (
                 images.map((image, index) => (
                   <PreviewCapsule
-                    key={`${image}-${index}`}
-                    file={image}
+                    key={`${image.file.name}-${index}`}
+                    file={image.file}
                     fileIndex={index}
+                    patientName={image.patientName}
+                    onPatientNameChange={handlePatientNameChange}
                   />
                 ))
               ) : (
