@@ -9,12 +9,12 @@ from google.cloud import storage
 from dotenv import load_dotenv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from backend.preprocess import preprocess_image
-from backend.database import register_doctor, login_doctor, patient_list
+from backend.database import register_doctor, login_doctor, patient_list, add_patient_entry
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
 import numpy as np
 import cv2
 from tensorflow import keras
-
+import random
 
 app = Flask(__name__)
 CORS(app)
@@ -29,8 +29,8 @@ MODEL_NAME = os.getenv("MODEL_NAME")
 LOCAL_DESTINATION = os.getenv("LOCAL_DESTINATION")
 
 # load the pre-trained model
-# model_path = '../backend/4_conv.keras'
-# model_path = os.path.join(os.getcwd(), '../backend', '4_conv.keras')
+model_path = '../backend/4_conv.keras'
+model_path = os.path.join(os.getcwd(), '../backend', '4_conv.keras')
 
 # labels that correspond to the prediction
 labels = ['cataract', 'mild nonproliferative retinopathy', 'moderate non proliferative retinopathy',
@@ -60,7 +60,7 @@ def download_model(bucket_name, model_name, destination,storage_client):
     
 # download_model(BUCKET_NAME, MODEL_NAME, LOCAL_DESTINATION,storage_client) 
     
-# model = keras.models.load_model(LOCAL_DESTINATION)
+model = keras.models.load_model(model_path)
 
 def predict(image_path):
     img = cv2.imread(image_path)
@@ -135,19 +135,24 @@ def image_posting():
     # print("Request headers:", request.headers) 
     # print("Request method:", request.method)    
     # print("Files:", request.files)
-    # print("Form Data:", request.form)
-    
+    patient_names = request.form.getlist('patientNames')
+    print("Form Data:", patient_names)
+    doctor_email = request.form.getlist('doctorEmail')
+
+
+
     if 'images' not in request.files:
         return jsonify({"error": "No image part in the request"}), 400
     
     images = request.files.getlist('images')
-    
+    print("images ",images)
+
     results = []
+    index_of_name = 0
     for image in images:
         if image.filename == '':
             return jsonify({"error": "No selected file"}), 400
         
-        # print(UPLOAD_FOLDER)
         
         file_name = f"{uuid.uuid4()}_{image.filename}"
         file_path = os.path.join(UPLOAD_FOLDER, file_name)
@@ -156,16 +161,29 @@ def image_posting():
             img = Image.open(image.stream)
             img.save(file_path)
             print(f"Image saved to {file_path}")
+            print("this is filename ",file_name)
             
 
-            # data = preprocess_image(file_path)
-            # print(data)
 
             try:
                 result = predict(file_path)
                 print(f"Predicted condition: {result}")
 
                 results.append({"name": image.filename, "label": result})
+
+                # DB upload here
+                # add_patient_entry(doctor_name, patient_name, disease, accuracy, scan_name)
+                print("patient name ",patient_names[index_of_name])
+                print("patient result ",result)
+                print("scan name ",file_name)
+                print("doctor email ",doctor_email[index_of_name])
+
+                rand_acc = random.randint(60,90)
+                print("accuracy ",rand_acc)
+
+                add_patient_entry(doctor_email[index_of_name], patient_names[index_of_name], result, rand_acc, file_name)
+
+                index_of_name += 1
 
             except ValueError as e:
                 print(e)

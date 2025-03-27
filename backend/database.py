@@ -76,7 +76,7 @@ def add_patient_entry(doctor_name, patient_name, disease, accuracy, scan_name):
         "date": date,
         "time": time,
         "disease": disease,
-        "accuracy": accuracy + "%",
+        "accuracy": str(accuracy) + "%",
         "scan_id": scan_id  # Store the GridFS file ID
     }
 
@@ -206,4 +206,4 @@ def patient_list(doctor_name):
 # add_patient_entry("iainm@gmail.com", "Kristian diana", "cataracts","98.5", "testimage.jpg")
 # add_patient_entry("iainm@gmail.com", "Ethan diana", "Normal","91.5", "testimage.jpg")
 
-add_patient_entry("iainm@gmail.com", "Félix Lengyel", "Glaucoma","100.0", "testimage.jpg")
+# add_patient_entry("iainm@gmail.com", "Félix Lengyel", "Glaucoma","100.0", "testimage.jpg")
