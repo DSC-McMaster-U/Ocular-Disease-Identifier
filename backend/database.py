@@ -206,4 +206,5 @@ def patient_list(doctor_name):
 # add_patient_entry("iainm@gmail.com", "Kristian diana", "cataracts","98.5", "testimage.jpg")
 # add_patient_entry("iainm@gmail.com", "Ethan diana", "Normal","91.5", "testimage.jpg")
 
+# add_patient_entry("iainm@gmail.com", "John Paul", "Normal","89.3", "testimage.jpg")
 # add_patient_entry("iainm@gmail.com", "Félix Lengyel", "Glaucoma","100.0", "testimage.jpg")
