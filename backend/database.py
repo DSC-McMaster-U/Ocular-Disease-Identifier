@@ -177,7 +177,7 @@ def patient_list(doctor_name):
                 try:
                     # Fetch the file from GridFS
                     gridfs_file = fs.get(scan_id)
-                    file_name = str(patient_name) + "*" + str(date) + "*" + str(scan['time']) + "*" + gridfs_file.filename
+                    file_name = str(patient_name) + "$" + str(date) + "$" + str(scan['time']) + "$" + gridfs_file.filename
                     p_info['img_name'] = file_name
 
 
